@@ -227,3 +227,72 @@ Figma：<https://www.figma.com/design/SOGGVyTkveGR1xD8KUh9PW/%E6%8E%A8%E3%81%97%
 
 ### 未ログインでも閲覧または利用できるページ
 - [x] 推しコミリスト閲覧機能（未ログインでも閲覧可能）
+
+### ER図
+https://gyazo.com/8925ad2b7e51f924c818d931e3a26d22
+
+### エンティティと属性とリレーション
+#### エンティティと属性
+- ユーザー(User)
+ - LINEユーザーID(line_user_id)
+ - ニックネーム(name)
+
+- リマインダー(Reminder)
+ - マンガタイトル(manga_title)
+ - リマインド日時(scheduled_at)
+ - メモ(memo)
+
+- 推しコミリスト(RecommendList)
+ - 推しコミリストID(recommendlist_id)
+ - タイトル(title)
+ - 説明文(description)
+ - 画像(image)
+
+- リスト内のマンガ(RecommendListItem)
+  - マンガタイトル(manga_title)
+  - 一言コメント(comment)
+
+#### リレーションの定義
+- ユーザーとリマインダー（1:N）
+  - ユーザーは複数のリマインダーを持つことが出来る
+  - リレーション: LINEユーザーID
+- ユーザーと推しコミリスト（1:N）
+  - ユーザーは複数の推しコミリストを持つことが出来る
+  - リレーション: LINEユーザーID
+- 推しコミリストとリスト内のマンガ
+ - 推しコミリストは複数のリスト内のマンガを持つことが出来る
+ - リレーション: 推しコミリストID
+
+### テーブル詳細
+#### users テーブル(ユーザー)
+- id : bigint / 主キー（Railsのデフォルト）
+- line_user_id : string / LINEログインで取得する一意の識別子
+- name : string / ユーザーのニックネーム
+
+#### reminders テーブル(リマインダー)
+- user_id : bigint / 外部キー（users.idに紐付け）
+- manga_title : string / マンガのタイトル
+- scheduled_at : datetime / 通知を送る日時
+- memo : text / ユーザーによるメモ
+
+#### recommend_lists テーブル(推しコミリスト)
+- user_id : bigint / 外部キー（users.idに紐付け）
+- title : string / リストのタイトル
+- description : text / リスト全体の説明文
+- image : string / リストのアイキャッチ画像
+
+#### recommend_list_items テーブル(リスト内のマンガ)
+- recommend_list_id : bigint / 外部キー（recommend_lists.idに紐付け）
+- manga_title : string / 作品名
+- comment : text / 作品に対する一言コメント
+
+### ER図の注意点
+- [x] 最新のER図スクリーンショットがPRに掲載されているか
+- [x] テーブル名は複数形になっているか
+- [x] カラムの型は記載されているか
+- [x] 外部キーは適切か
+- [x] リレーションは正しく描かれているか
+- [x] 多対多の関係になっていないか
+- [x] STIを使用していないか
+- [x] postsテーブルに post_name のような命名をしていないか
+  
