@@ -1,51 +1,8 @@
-require:
-  - rubocop-rails
-  - rubocop-rspec
+# Omakase Ruby styling for Rails
+inherit_gem: { rubocop-rails-omakase: rubocop.yml }
 
-AllCops:
-  NewCops: enable
-  TargetRubyVersion: 3.3
-  Exclude:
-    - "db/schema.rb"
-    - "db/migrate/**/*"
-    - "bin/**/*"
-    - "node_modules/**/*"
-    - "vendor/**/*"
-    - "config/initializers/devise.rb"
-
-# クラスにコメントを必須にしない
-Style/Documentation:
-  Enabled: false
-
-# frozen_string_literal コメントを必須にしない
-Style/FrozenStringLiteralComment:
-  Enabled: false
-
-# 1行の最大文字数を緩和
-Layout/LineLength:
-  Max: 120
-
-# メソッドの行数制限を緩和
-Metrics/MethodLength:
-  Max: 15
-
-# ブロックの行数制限を緩和
-Metrics/BlockLength:
-  Exclude:
-    - "config/**/*"
-    - "spec/**/*"
-
-# クラスの行数制限を緩和
-Metrics/ClassLength:
-  Max: 150
-
-# Rails の規約に合わせてスキップ対象のコップを設定
-Rails/FilePath:
-  EnforcedStyle: arguments
-
-# RSpec ファイルの行数制限を無効化
-RSpec/ExampleLength:
-  Enabled: false
-
-RSpec/MultipleExpectations:
-  Enabled: false
+# Overwrite or add rules to create your own house style
+#
+# # Use `[a, [b, c]]` not `[ a, [ b, c ] ]`
+# Layout/SpaceInsideArrayLiteralBrackets:
+#   Enabled: false
