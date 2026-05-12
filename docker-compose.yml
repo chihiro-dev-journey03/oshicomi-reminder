@@ -1,10 +1,9 @@
 services:
   web:
     build: .
-    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails server -b 0.0.0.0"
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails tailwindcss:build && bundle exec rails tailwindcss:watch & bundle exec rails server -b 0.0.0.0"
     volumes:
       - .:/app
-      - bundle_cache:/usr/local/bundle
     ports:
       - "3000:3000"
     depends_on:
@@ -43,6 +42,5 @@ services:
       - "6379:6379"
 
 volumes:
-  bundle_cache:
   postgres_data:
   redis_data:
