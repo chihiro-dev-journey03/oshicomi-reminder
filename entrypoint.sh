@@ -6,5 +6,6 @@ rm -f /app/tmp/pids/server.pid
 
 bundle exec rails db:migrate
 bundle exec rails tailwindcss:build
+bundle exec rails assets:precompile
 
 exec "$@"
