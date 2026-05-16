@@ -2,6 +2,22 @@
   <div class="text-center px-8">
     <h1 class="text-4xl font-bold text-pink-500 mb-4">推しコミリマインダー</h1>
     <p class="text-gray-600 text-lg mb-2">お気に入りのWeb漫画の更新日をLINEで受け取ろう</p>
-    <p class="text-gray-400 text-sm">Coming soon...</p>
+
+    <div class="mt-8">
+      <% if user_signed_in? %>
+        <p class="text-gray-700 mb-4"><%= current_user.name %> さん、ようこそ！</p>
+        <%= button_to "ログアウト", destroy_user_session_path, method: :delete,
+              class: "px-6 py-3 bg-gray-200 text-gray-700 rounded-full hover:bg-gray-300 transition" %>
+      <% else %>
+        <%= link_to user_line_omniauth_authorize_path,
+              data: { turbo: false },
+              class: "inline-flex items-center gap-3 px-8 py-4 bg-[#06C755] text-white font-bold rounded-full shadow hover:opacity-90 transition" do %>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+            <path d="M12 2C6.48 2 2 5.92 2 10.72c0 3.27 2.05 6.15 5.14 7.79-.2.73-.74 2.66-.85 3.07-.13.5.18.49.38.36.16-.1 2.5-1.7 3.52-2.38.58.08 1.18.13 1.81.13 5.52 0 10-3.92 10-8.77C22 5.92 17.52 2 12 2z"/>
+          </svg>
+          LINEでログイン
+        <% end %>
+      <% end %>
+    </div>
   </div>
 </div>
