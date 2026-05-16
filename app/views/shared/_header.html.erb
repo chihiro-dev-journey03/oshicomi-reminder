@@ -1,0 +1,17 @@
+<header class="fixed top-0 left-0 right-0 z-40 bg-white border-b border-pink-100 shadow-sm">
+  <div class="container mx-auto px-5 h-16 flex items-center justify-between">
+    <%= link_to root_path, class: "flex items-center gap-2" do %>
+      <span class="text-xl font-bold text-pink-500">推しコミリマインダー</span>
+    <% end %>
+
+    <nav>
+      <% if user_signed_in? %>
+        <div class="flex items-center gap-4">
+          <span class="text-sm text-gray-600"><%= current_user.name %> さん</span>
+          <%= button_to "ログアウト", destroy_user_session_path, method: :delete,
+                class: "px-4 py-2 text-sm bg-gray-100 text-gray-600 rounded-full hover:bg-gray-200 transition" %>
+        </div>
+      <% end %>
+    </nav>
+  </div>
+</header>
