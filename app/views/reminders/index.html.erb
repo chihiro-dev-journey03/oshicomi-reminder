@@ -1,7 +1,11 @@
 <% content_for :title, "リマインダー" %>
 
 <div class="w-full max-w-2xl mx-auto py-8">
-  <h1 class="text-2xl font-bold text-center text-gray-800 mb-6">リマインダー</h1>
+  <div class="flex items-center justify-between mb-6">
+    <h1 class="text-2xl font-bold text-gray-800">リマインダー</h1>
+    <%= link_to "追加", new_reminder_path,
+          class: "px-4 py-2 text-sm font-medium bg-pink-500 text-white rounded-full hover:bg-pink-600 transition" %>
+  </div>
 
   <div class="space-y-4">
     <% @reminders.each do |reminder| %>
