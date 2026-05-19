@@ -15,9 +15,16 @@
             <p class="font-semibold text-gray-800 truncate"><%= reminder.book.title %></p>
             <p class="text-sm text-gray-500 mt-1"><%= l(reminder.scheduled_at, format: :long) %></p>
           </div>
-          <span class="<%= status_badge_class(reminder.status) %> ml-4 shrink-0">
-            <%= t("reminder.status.#{reminder.status}") %>
-          </span>
+          <div class="flex items-center gap-2 ml-4 shrink-0">
+            <span class="<%= status_badge_class(reminder.status) %>">
+              <%= t("reminder.status.#{reminder.status}") %>
+            </span>
+            <%= link_to "編集", edit_reminder_path(reminder),
+                  class: "px-3 py-1 text-sm bg-gray-100 text-gray-600 rounded hover:bg-gray-200 transition" %>
+            <%= button_to "削除", reminder_path(reminder), method: :delete,
+                  data: { turbo_confirm: "このリマインダーを削除しますか？" },
+                  class: "px-3 py-1 text-sm bg-gray-100 text-gray-600 rounded hover:bg-gray-200 transition" %>
+          </div>
         </div>
         <% if reminder.memo.present? %>
           <p class="text-sm text-gray-600 mt-2"><%= reminder.memo %></p>
