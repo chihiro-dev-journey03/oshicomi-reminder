@@ -7,6 +7,10 @@
           class: "px-4 py-2 text-sm font-medium bg-pink-500 text-white rounded-full hover:bg-pink-600 transition" %>
   </div>
 
+  <% if @reminders.empty? %>
+    <p class="text-center text-gray-400 py-16">リマインダーが登録されていません</p>
+  <% end %>
+
   <div class="space-y-4">
     <% @reminders.each do |reminder| %>
       <div class="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
