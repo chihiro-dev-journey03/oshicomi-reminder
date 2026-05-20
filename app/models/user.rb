@@ -4,6 +4,8 @@ class User < ApplicationRecord
   devise :database_authenticatable, :rememberable,
          :omniauthable, omniauth_providers: [ :line ]
 
+  has_many :reminders, dependent: :destroy
+
   def self.find_or_create_from_omniauth(auth)
     find_or_create_by!(provider: auth.provider, uid: auth.uid) do |user|
       user.name  = auth.info.name
