@@ -11,28 +11,30 @@
     <p class="text-center text-gray-400 py-16">リマインダーが登録されていません</p>
   <% end %>
 
-  <div class="space-y-4">
+  <div class="space-y-3">
     <% @reminders.each do |reminder| %>
-      <div class="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
-        <div class="flex items-center justify-between">
+      <div class="bg-white border border-gray-200 rounded-lg px-5 py-4 shadow-sm">
+        <div class="flex items-center justify-between gap-4">
           <div class="flex-1 min-w-0">
             <p class="font-semibold text-gray-800 truncate"><%= reminder.book.title %></p>
-            <p class="text-sm text-gray-500 mt-1"><%= l(reminder.scheduled_at, format: :long) %></p>
+            <div class="flex items-center gap-1.5 mt-1.5 text-sm text-gray-500">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 shrink-0 text-pink-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span><%= l(reminder.scheduled_at, format: :long) %></span>
+            </div>
+            <% if reminder.memo.present? %>
+              <p class="text-sm text-gray-400 mt-1.5 truncate"><%= reminder.memo %></p>
+            <% end %>
           </div>
-          <div class="flex items-center gap-2 ml-4 shrink-0">
-            <span class="<%= status_badge_class(reminder.status) %>">
-              <%= t("reminder.status.#{reminder.status}") %>
-            </span>
+          <div class="flex items-center gap-2 shrink-0">
             <%= link_to "編集", edit_reminder_path(reminder),
-                  class: "px-3 py-1 text-sm bg-gray-100 text-gray-600 rounded hover:bg-gray-200 transition" %>
+                  class: "px-3 py-1.5 text-sm bg-gray-100 text-gray-600 rounded hover:bg-gray-200 transition" %>
             <%= button_to "削除", reminder_path(reminder), method: :delete,
                   data: { turbo_confirm: "このリマインダーを削除しますか？" },
-                  class: "px-3 py-1 text-sm bg-gray-100 text-gray-600 rounded hover:bg-gray-200 transition" %>
+                  class: "px-3 py-1.5 text-sm bg-gray-100 text-gray-600 rounded hover:bg-gray-200 transition" %>
           </div>
         </div>
-        <% if reminder.memo.present? %>
-          <p class="text-sm text-gray-600 mt-2"><%= reminder.memo %></p>
-        <% end %>
       </div>
     <% end %>
   </div>
