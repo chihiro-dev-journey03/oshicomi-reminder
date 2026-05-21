@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_05_19_155600) do
+ActiveRecord::Schema[7.2].define(version: 2026_05_22_164700) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -26,9 +26,15 @@ ActiveRecord::Schema[7.2].define(version: 2026_05_19_155600) do
     t.bigint "user_id", null: false
     t.bigint "book_id", null: false
     t.text "memo"
-    t.datetime "scheduled_at", null: false
     t.integer "status", default: 0, null: false
-    t.datetime "sent_at"
+    t.string "recurrence_type", default: "daily", null: false
+    t.integer "time_hour", default: 9, null: false
+    t.integer "time_minute", default: 0, null: false
+    t.integer "days_of_week", default: 0
+    t.integer "day_of_month"
+    t.string "monthly_type"
+    t.integer "week_of_month"
+    t.integer "weekday"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["book_id"], name: "index_reminders_on_book_id"
