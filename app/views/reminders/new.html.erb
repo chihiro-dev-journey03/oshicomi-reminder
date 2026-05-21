@@ -1,9 +1,9 @@
 <turbo-frame id="modal">
-  <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
-       data-controller="reminder-form"
-       data-action="click->reminder-form#closeOnBackdrop">
+    <div style="position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.4);"
+         data-controller="reminder-form"
+         data-action="click->reminder-form#closeOnBackdrop">
 
-    <div class="bg-white rounded-2xl shadow-xl w-full max-w-lg mx-4 overflow-y-auto max-h-[90vh]"
+    <div style="background:white;border-radius:1rem;box-shadow:0 20px 40px rgba(0,0,0,0.15);width:100%;max-width:32rem;margin:0 1rem;overflow-y:auto;max-height:90vh;"
          data-reminder-form-target="dialog">
 
       <%# ヘッダー %>
