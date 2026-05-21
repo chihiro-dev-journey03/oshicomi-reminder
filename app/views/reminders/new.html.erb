@@ -1,0 +1,166 @@
+<turbo-frame id="modal">
+  <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
+       data-controller="reminder-form"
+       data-action="click->reminder-form#closeOnBackdrop">
+
+    <div class="bg-white rounded-2xl shadow-xl w-full max-w-lg mx-4 overflow-y-auto max-h-[90vh]"
+         data-reminder-form-target="dialog">
+
+      <%# ヘッダー %>
+      <div class="flex items-center justify-between px-6 pt-5 pb-4 border-b border-gray-100">
+        <h2 class="text-lg font-bold text-gray-800">リマインダー登録</h2>
+        <button type="button"
+                data-action="reminder-form#close"
+                class="text-gray-400 hover:text-gray-600 transition">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <%= form_with model: @reminder, url: reminders_path, data: { reminder_form_target: "form" } do |f| %>
+        <div class="px-6 py-5 space-y-5">
+
+          <%# バリデーションエラー表示 %>
+          <% if @reminder.errors.any? %>
+            <div class="rounded-lg bg-red-50 border border-red-200 px-4 py-3">
+              <ul class="list-disc list-inside text-sm text-red-600 space-y-1">
+                <% @reminder.errors.each do |error| %>
+                  <li><%= error.full_message %></li>
+                <% end %>
+              </ul>
+            </div>
+          <% end %>
+
+          <%# マンガタイトル %>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+              マンガタイトル <span class="text-xs text-red-500">必須</span>
+            </label>
+            <%= text_field_tag "reminder[book_title]",
+                  params.dig(:reminder, :book_title),
+                  placeholder: "例：進撃の巨人",
+                  class: "w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-400" %>
+          </div>
+
+          <%# リマインド日時 %>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+              リマインド日時 <span class="text-xs text-red-500">必須</span>
+            </label>
+
+            <%# 繰り返しタイプ選択タブ %>
+            <div class="flex gap-1 mb-4 bg-gray-100 p-1 rounded-lg">
+              <% [["daily", "日ごと"], ["weekly", "週ごと"], ["monthly", "ヶ月ごと"]].each do |value, label| %>
+                <label class="flex-1 text-center cursor-pointer">
+                  <%= f.radio_button :recurrence_type, value,
+                        data: { action: "change->reminder-form#switchRecurrence",
+                                reminder_form_target: "recurrenceRadio" },
+                        class: "sr-only peer" %>
+                  <span class="block px-3 py-1.5 text-sm rounded-md peer-checked:bg-white peer-checked:font-semibold peer-checked:shadow-sm transition"
+                        style="color: inherit;">
+                    <%= label %>
+                  </span>
+                </label>
+              <% end %>
+            </div>
+
+            <%# 日ごとセクション %>
+            <div data-reminder-form-target="dailySection">
+              <%= render "reminders/time_fields", f: f %>
+            </div>
+
+            <%# 週ごとセクション %>
+            <div data-reminder-form-target="weeklySection" class="hidden">
+              <div class="mb-3">
+                <p class="text-xs text-gray-500 mb-2">曜日（複数選択可）</p>
+                <div class="flex gap-1.5 flex-wrap">
+                  <% Reminder::DAYS_OF_WEEK_BITS.each do |bit, label| %>
+                    <label class="cursor-pointer">
+                      <input type="checkbox"
+                             name="reminder[days_of_week_array][]"
+                             value="<%= bit %>"
+                             class="sr-only peer"
+                             data-action="change->reminder-form#updateDayButtons"
+                             <%= "checked" if @reminder.days_of_week_array.include?(bit) %>>
+                      <span class="block w-9 h-9 flex items-center justify-center text-sm rounded-full border border-gray-300 peer-checked:text-white peer-checked:border-transparent transition"
+                            style="<%= "background-color:#22c55e;" if @reminder.days_of_week_array.include?(bit) %>"
+                            data-reminder-form-target="dayButton">
+                        <%= label %>
+                      </span>
+                    </label>
+                  <% end %>
+                </div>
+              </div>
+              <%= render "reminders/time_fields", f: f %>
+            </div>
+
+            <%# ヶ月ごとセクション %>
+            <div data-reminder-form-target="monthlySection" class="hidden">
+              <div class="mb-3 space-y-3">
+                <%# 日付指定 %>
+                <label class="flex items-center gap-2 cursor-pointer">
+                  <%= f.radio_button :monthly_type, "date",
+                        data: { action: "change->reminder-form#switchMonthlyType" },
+                        class: "accent-green-500" %>
+                  <span class="text-sm text-gray-700">日付で指定：</span>
+                  <%= f.select :day_of_month,
+                        options_for_select((1..31).map { |d| [d.to_s, d] }, @reminder.day_of_month),
+                        { include_blank: "日" },
+                        class: "border border-gray-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-green-400",
+                        data: { reminder_form_target: "dateSelect" } %>
+                  <span class="text-sm text-gray-700">日</span>
+                </label>
+
+                <%# 曜日指定 %>
+                <label class="flex items-center gap-2 cursor-pointer">
+                  <%= f.radio_button :monthly_type, "weekday",
+                        data: { action: "change->reminder-form#switchMonthlyType" },
+                        class: "accent-green-500" %>
+                  <span class="text-sm text-gray-700">曜日で指定：</span>
+                  <div class="flex items-center gap-1"
+                       data-reminder-form-target="weekdaySelect">
+                    <%= f.select :week_of_month,
+                          options_for_select([["第1", 1], ["第2", 2], ["第3", 3], ["第4", 4], ["第5", 5]], @reminder.week_of_month),
+                          { include_blank: "第n" },
+                          class: "border border-gray-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-green-400" %>
+                    <%= f.select :weekday,
+                          options_for_select(Reminder::DAYS_OF_WEEK_BITS.map { |k, v| ["#{v}曜日", k] }, @reminder.weekday),
+                          { include_blank: "曜日" },
+                          class: "border border-gray-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-green-400" %>
+                  </div>
+                </label>
+              </div>
+              <%= render "reminders/time_fields", f: f %>
+            </div>
+          </div>
+
+          <%# メモ %>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+              メモ <span class="text-xs text-gray-400">任意</span>
+            </label>
+            <%= f.text_area :memo,
+                  rows: 2,
+                  placeholder: "読みたい理由や気になる点など",
+                  class: "w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-400 resize-none" %>
+          </div>
+
+        </div>
+
+        <%# フッターボタン %>
+        <div class="flex justify-end gap-3 px-6 py-4 border-t border-gray-100">
+          <button type="button"
+                  data-action="reminder-form#close"
+                  class="px-5 py-2 text-sm text-gray-600 bg-gray-100 rounded-full hover:bg-gray-200 transition">
+            キャンセル
+          </button>
+          <%= f.submit "保存",
+                style: "background-color:#22c55e; color:white;",
+                class: "px-6 py-2 text-sm font-medium rounded-full hover:opacity-90 transition cursor-pointer" %>
+        </div>
+
+      <% end %>
+    </div>
+  </div>
+</turbo-frame>
