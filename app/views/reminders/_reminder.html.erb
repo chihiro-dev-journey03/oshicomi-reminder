@@ -17,6 +17,7 @@
     </div>
     <div class="flex items-center gap-2 shrink-0">
       <%= link_to edit_reminder_path(reminder),
+            data: { turbo_frame: "modal" },
             style: "color:#374151;",
             class: "inline-flex items-center gap-1 px-3 py-1.5 text-sm bg-gray-100 rounded-full hover:bg-gray-200 transition" do %>
         <svg xmlns="http://www.w3.org/2000/svg" style="width:0.875rem;height:0.875rem;" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
