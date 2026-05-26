@@ -28,7 +28,10 @@ class RemindersController < ApplicationController
     @reminder.days_of_week_array = params.dig(:reminder, :days_of_week_array) || []
 
     if @reminder.save
-      redirect_to reminders_path, notice: "リマインダーを登録しました"
+      respond_to do |format|
+        format.turbo_stream
+        format.html { redirect_to reminders_path, notice: "リマインダーを登録しました" }
+      end
     else
       render :new, status: :unprocessable_entity
     end
