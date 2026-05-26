@@ -6,7 +6,7 @@ class RemindersController < ApplicationController
   end
 
   def new
-    @reminder = Reminder.new(recurrence_type: "daily", time_hour: 9, time_minute: 0, monthly_type: "date", day_of_month: 1)
+    @reminder = Reminder.new(recurrence_type: "daily", time_hour: 9, time_minute: 0, monthly_type: "date", day_of_month: 1, week_of_month: 1)
   end
 
   def create

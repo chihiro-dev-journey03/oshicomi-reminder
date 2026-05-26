@@ -121,8 +121,8 @@
                   <div class="flex items-center gap-1"
                        data-reminder-form-target="weekdaySelect">
                     <%= f.select :week_of_month,
-                          options_for_select([["最初の", 1], ["第二", 2], ["第三", 3], ["第四", 4], ["最後の", 5]], @reminder.week_of_month),
-                          { include_blank: "選択" },
+                          options_for_select([["最初の", 1], ["第二", 2], ["第三", 3], ["第四", 4], ["最後の", 5]], @reminder.week_of_month || 1),
+                          {},
                           class: "border border-gray-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-green-400" %>
                     <%= f.select :weekday,
                           options_for_select(Reminder::DAYS_OF_WEEK_BITS.map { |k, v| ["#{v}曜日", k] }, @reminder.weekday),
