@@ -125,8 +125,8 @@
                           {},
                           class: "border border-gray-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-green-400" %>
                     <%= f.select :weekday,
-                          options_for_select(Reminder::DAYS_OF_WEEK_BITS.map { |k, v| ["#{v}曜日", k] }, @reminder.weekday),
-                          { include_blank: "曜日" },
+                          options_for_select(Reminder::DAYS_OF_WEEK_BITS.map { |k, v| ["#{v}曜日", k] }, @reminder.weekday || 0),
+                          {},
                           class: "border border-gray-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-green-400" %>
                   </div>
                 </label>
