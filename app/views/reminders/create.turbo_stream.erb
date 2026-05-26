@@ -1,0 +1,20 @@
+<%# モーダルを閉じる %>
+<%= turbo_stream.update "modal", "" %>
+
+<%# リストの先頭に追加 %>
+<%= turbo_stream.prepend "reminders_list" do %>
+  <%= render "reminder", reminder: @reminder %>
+<% end %>
+
+<%# 空状態メッセージを非表示 %>
+<%= turbo_stream.replace "reminders_empty" do %>
+  <p id="reminders_empty" style="display:none;"></p>
+<% end %>
+
+<%# フラッシュメッセージを表示 %>
+<%= turbo_stream.update "flash_notice" do %>
+  <p data-controller="flash"
+     class="fixed top-20 left-1/2 -translate-x-1/2 bg-green-100 text-green-800 px-6 py-3 rounded shadow z-50">
+    リマインダーを登録しました
+  </p>
+<% end %>

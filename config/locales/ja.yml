@@ -14,3 +14,19 @@ ja:
       pending: "未送信"
       sent: "送信済み"
       failed: "送信失敗"
+  activerecord:
+    models:
+      reminder: "リマインダー"
+    attributes:
+      reminder:
+        book_title: "マンガタイトル"
+        recurrence_type: "繰り返しタイプ"
+        recurrence_interval: "繰り返す間隔"
+        time_hour: "時刻（時）"
+        time_minute: "時刻（分）"
+        days_of_week: "曜日"
+        day_of_month: "日付"
+        week_of_month: "第n週"
+        weekday: "曜日"
+        monthly_type: "指定方法"
+        memo: "メモ"

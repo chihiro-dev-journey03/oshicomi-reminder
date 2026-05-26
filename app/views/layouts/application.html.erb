@@ -20,14 +20,25 @@
 
   <body>
     <%= render "shared/header" %>
-    <% if notice %>
-      <p class="fixed top-20 left-1/2 -translate-x-1/2 bg-green-100 text-green-800 px-6 py-3 rounded shadow z-50"><%= notice %></p>
-    <% end %>
-    <% if alert %>
-      <p class="fixed top-20 left-1/2 -translate-x-1/2 bg-red-100 text-red-800 px-6 py-3 rounded shadow z-50"><%= alert %></p>
-    <% end %>
+    <div id="flash_notice">
+      <% if notice %>
+        <p data-controller="flash"
+           class="fixed top-20 left-1/2 -translate-x-1/2 bg-green-100 text-green-800 px-6 py-3 rounded shadow z-50">
+          <%= notice %>
+        </p>
+      <% end %>
+    </div>
+    <div id="flash_alert">
+      <% if alert %>
+        <p data-controller="flash"
+           class="fixed top-20 left-1/2 -translate-x-1/2 bg-red-100 text-red-800 px-6 py-3 rounded shadow z-50">
+          <%= alert %>
+        </p>
+      <% end %>
+    </div>
     <main class="container mx-auto mt-16 px-5 flex">
       <%= yield %>
     </main>
+    <turbo-frame id="modal"></turbo-frame>
   </body>
 </html>

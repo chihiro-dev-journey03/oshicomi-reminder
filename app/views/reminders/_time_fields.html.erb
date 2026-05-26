@@ -1,0 +1,12 @@
+<div class="flex items-center gap-2">
+  <span class="text-sm text-gray-700">時刻：</span>
+  <%= f.select :time_hour,
+        options_for_select((0..23).map { |h| [format("%02d", h), h] }, f.object.time_hour),
+        {},
+        class: "border border-gray-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-green-400" %>
+  <span class="text-gray-400">:</span>
+  <%= f.select :time_minute,
+        options_for_select([[" 00", 0], [" 15", 15], [" 30", 30], [" 45", 45]], f.object.time_minute),
+        {},
+        class: "border border-gray-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-green-400" %>
+</div>
