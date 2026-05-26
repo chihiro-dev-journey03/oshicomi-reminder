@@ -1,0 +1,15 @@
+<%# モーダルを閉じる %>
+<%= turbo_stream.update "modal", "" %>
+
+<%# リマインダーカードを更新 %>
+<%= turbo_stream.replace "reminder_#{@reminder.id}" do %>
+  <%= render "reminder", reminder: @reminder %>
+<% end %>
+
+<%# フラッシュメッセージを表示 %>
+<%= turbo_stream.update "flash_notice" do %>
+  <p data-controller="flash"
+     class="fixed top-20 left-1/2 -translate-x-1/2 bg-green-100 text-green-800 px-6 py-3 rounded shadow z-50">
+    リマインダーを更新しました
+  </p>
+<% end %>

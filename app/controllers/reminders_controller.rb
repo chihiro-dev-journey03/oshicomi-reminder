@@ -37,6 +37,35 @@ class RemindersController < ApplicationController
     end
   end
 
+  def edit
+    @reminder = current_user.reminders.find(params[:id])
+  end
+
+  def update
+    @reminder = current_user.reminders.find(params[:id])
+    book_title = params.dig(:reminder, :book_title)&.strip
+
+    if book_title.blank?
+      @reminder.assign_attributes(reminder_params)
+      @reminder.errors.add(:base, "マンガタイトルを入力してください")
+      return render :edit, status: :unprocessable_entity
+    end
+
+    book = Book.find_or_create_by(title: book_title)
+    @reminder.assign_attributes(reminder_params)
+    @reminder.book = book
+    @reminder.days_of_week_array = params.dig(:reminder, :days_of_week_array) || []
+
+    if @reminder.save
+      respond_to do |format|
+        format.turbo_stream
+        format.html { redirect_to reminders_path, notice: "リマインダーを更新しました" }
+      end
+    else
+      render :edit, status: :unprocessable_entity
+    end
+  end
+
   private
 
   def reminder_params
