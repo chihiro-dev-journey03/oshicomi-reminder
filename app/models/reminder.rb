@@ -22,7 +22,8 @@ class Reminder < ApplicationRecord
   validate :recurrence_interval_within_max
   validates :time_hour,   presence: true, numericality: { in: 0..23 }
   validates :time_minute, presence: true, numericality: { in: 0..59 }
-  validates :days_of_week, presence: true, if: -> { recurrence_type == "weekly" }
+  validates :days_of_week, numericality: { greater_than: 0, message: "を1つ以上選択してください" },
+                           if: -> { recurrence_type == "weekly" }
   validates :day_of_month, presence: true, numericality: { in: 1..31 },
                            if: -> { recurrence_type == "monthly" && monthly_type == "date" }
   validates :week_of_month, presence: true, numericality: { in: 1..5 },
