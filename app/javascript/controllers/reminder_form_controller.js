@@ -3,7 +3,7 @@ import { Controller } from "@hotwired/stimulus"
 export default class extends Controller {
   static targets = [
     "dialog",
-    "recurrenceSelect",
+    "recurrenceRadio",
     "intervalInput",
     "dailySection",
     "weeklySection",
@@ -24,7 +24,7 @@ export default class extends Controller {
 
   // 繰り返しタイプの切り替え
   switchRecurrence() {
-    const selected = this.recurrenceSelectTarget.value || "daily"
+    const selected = this.recurrenceRadioTargets.find(r => r.checked)?.value || "daily"
     this.dailySectionTarget.classList.toggle("hidden", selected !== "daily")
     this.weeklySectionTarget.classList.toggle("hidden", selected !== "weekly")
     this.monthlySectionTarget.classList.toggle("hidden", selected !== "monthly")

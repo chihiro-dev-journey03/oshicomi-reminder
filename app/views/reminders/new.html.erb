@@ -49,21 +49,29 @@
               リマインド日時 <span class="text-xs text-red-500">必須</span>
             </label>
 
-            <%# 繰り返す間隔（数値 + タイプ選択） %>
-            <div class="flex items-center gap-2 mb-4">
+            <%# 繰り返す間隔（数値入力） %>
+            <div class="flex items-center gap-2 mb-3">
+              <span class="text-sm text-gray-600">間隔：</span>
               <%= f.number_field :recurrence_interval,
                     min: 1,
                     data: { reminder_form_target: "intervalInput" },
-                    class: "w-16 border border-gray-300 rounded-lg px-2 py-2 text-sm text-center focus:outline-none focus:ring-2 focus:ring-green-400" %>
-              <%= f.select :recurrence_type,
-                    options_for_select(
-                      [["日ごと", "daily"], ["週ごと", "weekly"], ["ヶ月ごと", "monthly"]],
-                      @reminder.recurrence_type
-                    ),
-                    {},
-                    data: { action: "change->reminder-form#switchRecurrence",
-                            reminder_form_target: "recurrenceSelect" },
-                    class: "flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-400" %>
+                    class: "w-16 border border-gray-300 rounded-lg px-2 py-1.5 text-sm text-center focus:outline-none focus:ring-2 focus:ring-green-400" %>
+            </div>
+
+            <%# 繰り返しタイプ選択タブ %>
+            <div class="flex gap-1 mb-4 bg-gray-100 p-1 rounded-lg">
+              <% [["daily", "日ごと"], ["weekly", "週ごと"], ["monthly", "ヶ月ごと"]].each do |value, label| %>
+                <label class="flex-1 text-center cursor-pointer">
+                  <%= f.radio_button :recurrence_type, value,
+                        data: { action: "change->reminder-form#switchRecurrence",
+                                reminder_form_target: "recurrenceRadio" },
+                        class: "sr-only peer" %>
+                  <span class="block px-3 py-1.5 text-sm rounded-md peer-checked:bg-white peer-checked:font-semibold peer-checked:shadow-sm transition"
+                        style="color: inherit;">
+                    <%= label %>
+                  </span>
+                </label>
+              <% end %>
             </div>
 
             <%# 日ごとセクション %>
