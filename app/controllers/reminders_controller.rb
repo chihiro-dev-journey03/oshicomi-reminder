@@ -41,6 +41,16 @@ class RemindersController < ApplicationController
     @reminder = current_user.reminders.find(params[:id])
   end
 
+  def destroy
+    @reminder = current_user.reminders.find(params[:id])
+    @reminder.destroy!
+
+    respond_to do |format|
+      format.turbo_stream
+      format.html { redirect_to reminders_path, notice: "リマインダーを削除しました" }
+    end
+  end
+
   def update
     @reminder = current_user.reminders.find(params[:id])
     book_title = params.dig(:reminder, :book_title)&.strip
