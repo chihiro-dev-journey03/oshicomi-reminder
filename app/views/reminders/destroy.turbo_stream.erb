@@ -1,0 +1,19 @@
+<%# リマインダーカードを削除 %>
+<%= turbo_stream.remove "reminder_#{@reminder.id}" %>
+
+<%# リストが空になった場合に空状態メッセージを表示 %>
+<% if current_user.reminders.empty? %>
+  <%= turbo_stream.replace "reminders_empty" do %>
+    <p id="reminders_empty" class="text-center text-gray-400 py-16">
+      リマインダーが登録されていません
+    </p>
+  <% end %>
+<% end %>
+
+<%# フラッシュメッセージを表示 %>
+<%= turbo_stream.update "flash_notice" do %>
+  <p data-controller="flash"
+     class="fixed top-20 left-1/2 -translate-x-1/2 bg-green-100 text-green-800 px-6 py-3 rounded shadow z-50">
+    リマインダーを削除しました
+  </p>
+<% end %>
