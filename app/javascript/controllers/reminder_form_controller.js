@@ -3,7 +3,8 @@ import { Controller } from "@hotwired/stimulus"
 export default class extends Controller {
   static targets = [
     "dialog",
-    "recurrenceRadio",
+    "recurrenceSelect",
+    "intervalInput",
     "dailySection",
     "weeklySection",
     "monthlySection",
@@ -11,6 +12,9 @@ export default class extends Controller {
     "dateSelect",
     "weekdaySelect"
   ]
+
+  // 間隔の上限（日ごと:99, 週ごと:52, ヶ月ごと:12）
+  intervalMaxMap = { daily: 99, weekly: 52, monthly: 12 }
 
   connect() {
     this.switchRecurrence()
@@ -20,10 +24,17 @@ export default class extends Controller {
 
   // 繰り返しタイプの切り替え
   switchRecurrence() {
-    const selected = this.recurrenceRadioTargets.find(r => r.checked)?.value || "daily"
+    const selected = this.recurrenceSelectTarget.value || "daily"
     this.dailySectionTarget.classList.toggle("hidden", selected !== "daily")
     this.weeklySectionTarget.classList.toggle("hidden", selected !== "weekly")
     this.monthlySectionTarget.classList.toggle("hidden", selected !== "monthly")
+
+    // 間隔の上限を更新
+    const max = this.intervalMaxMap[selected] || 99
+    this.intervalInputTarget.max = max
+    if (parseInt(this.intervalInputTarget.value) > max) {
+      this.intervalInputTarget.value = max
+    }
   }
 
   // 月ごと：日付指定 / 曜日指定の切り替え

@@ -6,7 +6,11 @@ class RemindersController < ApplicationController
   end
 
   def new
-    @reminder = Reminder.new(recurrence_type: "daily", time_hour: 9, time_minute: 0, monthly_type: "date", day_of_month: 1, week_of_month: 1, weekday: 0)
+    @reminder = Reminder.new(
+      recurrence_type: "daily", recurrence_interval: 1,
+      time_hour: 9, time_minute: 0,
+      monthly_type: "date", day_of_month: 1, week_of_month: 1, weekday: 0
+    )
   end
 
   def create
@@ -35,6 +39,7 @@ class RemindersController < ApplicationController
   def reminder_params
     params.require(:reminder).permit(
       :recurrence_type,
+      :recurrence_interval,
       :time_hour,
       :time_minute,
       :day_of_month,
