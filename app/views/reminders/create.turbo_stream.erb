@@ -7,7 +7,9 @@
 <% end %>
 
 <%# 空状態メッセージを非表示 %>
-<%= turbo_stream.add_css_class "reminders_empty", "hidden" %>
+<%= turbo_stream.replace "reminders_empty" do %>
+  <p id="reminders_empty" style="display:none;"></p>
+<% end %>
 
 <%# フラッシュメッセージを表示 %>
 <%= turbo_stream.update "flash_notice" do %>
