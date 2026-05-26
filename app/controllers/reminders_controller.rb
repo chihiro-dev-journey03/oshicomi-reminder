@@ -18,7 +18,7 @@ class RemindersController < ApplicationController
 
     if book_title.blank?
       @reminder = current_user.reminders.build(reminder_params)
-      @reminder.errors.add(:book_title, "を入力してください")
+      @reminder.errors.add(:base, "マンガタイトルを入力してください")
       return render :new, status: :unprocessable_entity
     end
 
