@@ -78,7 +78,8 @@ export default class extends Controller {
     } else {
       this.resultsTarget.innerHTML = uniqueTitles.map(title => `
         <button type="button"
-                class="w-full px-4 py-2.5 hover:bg-green-50 transition text-left text-sm text-gray-800 truncate"
+                class="w-full px-4 py-2.5 hover:bg-green-50 transition text-sm text-gray-800 truncate"
+                style="text-align: left;"
                 data-action="click->book-search#select"
                 data-title="${this.escapeAttr(title)}">
           ${this.escapeHtml(title)}
