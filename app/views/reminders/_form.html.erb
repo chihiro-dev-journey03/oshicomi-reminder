@@ -85,7 +85,6 @@
 
             <%# 日ごとセクション %>
             <div data-reminder-form-target="dailySection">
-              <%= render "reminders/time_fields", f: f %>
             </div>
 
             <%# 週ごとセクション %>
@@ -110,7 +109,6 @@
                   <% end %>
                 </div>
               </div>
-              <%= render "reminders/time_fields", f: f %>
             </div>
 
             <%# ヶ月ごとセクション %>
@@ -149,8 +147,10 @@
                   </div>
                 </label>
               </div>
-              <%= render "reminders/time_fields", f: f %>
             </div>
+
+            <%# 時刻（全繰り返しタイプ共通・1箇所のみ） %>
+            <%= render "reminders/time_fields", f: f %>
           </div>
 
           <%# メモ %>
