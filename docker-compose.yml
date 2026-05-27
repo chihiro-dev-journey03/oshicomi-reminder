@@ -11,6 +11,8 @@ services:
         condition: service_healthy
       redis:
         condition: service_started
+    env_file:
+      - .env
     environment:
       RAILS_ENV: development
       DATABASE_HOST: db
