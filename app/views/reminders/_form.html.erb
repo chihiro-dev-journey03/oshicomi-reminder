@@ -33,14 +33,23 @@
           <% end %>
 
           <%# マンガタイトル %>
-          <div>
+          <div data-controller="book-search">
             <label class="block text-sm font-medium text-gray-700 mb-1">
               マンガタイトル <span class="text-xs text-red-500">必須</span>
             </label>
-            <%= text_field_tag "reminder[book_title]",
-                  (@reminder.new_record? ? params.dig(:reminder, :book_title) : @reminder.book&.title),
-                  placeholder: "",
-                  class: "w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-400" %>
+            <div class="relative">
+              <div class="relative">
+                <%= text_field_tag "reminder[book_title]",
+                      (@reminder.new_record? ? params.dig(:reminder, :book_title) : @reminder.book&.title),
+                      placeholder: "タイトルで検索...",
+                      autocomplete: "off",
+                      data: { "book_search_target": "input", action: "input->book-search#search" },
+                      class: "w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-400" %>
+              </div>
+              <div class="hidden absolute z-20 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-64 overflow-y-auto divide-y divide-gray-100"
+                   data-book-search-target="results">
+              </div>
+            </div>
           </div>
 
           <%# リマインド日時 %>
@@ -76,7 +85,6 @@
 
             <%# 日ごとセクション %>
             <div data-reminder-form-target="dailySection">
-              <%= render "reminders/time_fields", f: f %>
             </div>
 
             <%# 週ごとセクション %>
@@ -101,7 +109,6 @@
                   <% end %>
                 </div>
               </div>
-              <%= render "reminders/time_fields", f: f %>
             </div>
 
             <%# ヶ月ごとセクション %>
@@ -140,8 +147,10 @@
                   </div>
                 </label>
               </div>
-              <%= render "reminders/time_fields", f: f %>
             </div>
+
+            <%# 時刻（全繰り返しタイプ共通・1箇所のみ） %>
+            <%= render "reminders/time_fields", f: f %>
           </div>
 
           <%# メモ %>
