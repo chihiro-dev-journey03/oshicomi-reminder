@@ -44,13 +44,7 @@
                       placeholder: "タイトルで検索...",
                       autocomplete: "off",
                       data: { "book_search_target": "input", action: "input->book-search#search" },
-                      class: "w-full border border-gray-300 rounded-lg px-3 py-2 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-green-400" %>
-                <div class="hidden absolute right-3 top-1/2 -translate-y-1/2" data-book-search-target="loading">
-                  <svg class="animate-spin w-4 h-4 text-green-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 12 0 12 12h4a8 8 0 01-8 8 8 8 0 01-8-8z"></path>
-                  </svg>
-                </div>
+                      class: "w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-400" %>
               </div>
               <div class="hidden absolute z-20 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-64 overflow-y-auto divide-y divide-gray-100"
                    data-book-search-target="results">

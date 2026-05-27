@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["input", "results", "loading"]
+  static targets = ["input", "results"]
 
   connect() {
     this.debounceTimer = null
@@ -27,8 +27,6 @@ export default class extends Controller {
   }
 
   async fetchBooks(keyword) {
-    this.showLoading()
-
     try {
       const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content
       const response = await fetch(`/books/search?keyword=${encodeURIComponent(keyword)}`, {
@@ -44,22 +42,39 @@ export default class extends Controller {
       this.showResults(books)
     } catch {
       this.hideResults()
-    } finally {
-      this.hideLoading()
     }
   }
 
+  // 「カグラバチ 11」「【全巻】カグラバチ 1-11巻セット」→「カグラバチ」のようにベースタイトルを抽出
+  extractBaseTitle(title) {
+    return title
+      .replace(/^【[^】]*】\s*/, "")   // 先頭の【...】を除去
+      .replace(/\s+\d.*$/, "")         // 半角スペース＋数字以降を除去
+      .trim()
+  }
+
   showResults(books) {
-    if (books.length === 0) {
+    const seen = new Set()
+    const uniqueTitles = []
+
+    for (const book of books) {
+      const base = this.extractBaseTitle(book.title)
+      if (base && !seen.has(base)) {
+        seen.add(base)
+        uniqueTitles.push(base)
+      }
+    }
+
+    if (uniqueTitles.length === 0) {
       this.resultsTarget.innerHTML =
         `<div class="px-4 py-3 text-sm text-gray-500">見つかりませんでした</div>`
     } else {
-      this.resultsTarget.innerHTML = books.map(book => `
+      this.resultsTarget.innerHTML = uniqueTitles.map(title => `
         <button type="button"
                 class="w-full px-4 py-2.5 hover:bg-green-50 transition text-left text-sm text-gray-800 truncate"
                 data-action="click->book-search#select"
-                data-title="${this.escapeAttr(book.title)}">
-          ${this.escapeHtml(book.title)}
+                data-title="${this.escapeAttr(title)}">
+          ${this.escapeHtml(title)}
         </button>
       `).join("")
     }
@@ -75,14 +90,6 @@ export default class extends Controller {
   hideResults() {
     this.resultsTarget.classList.add("hidden")
     this.resultsTarget.innerHTML = ""
-  }
-
-  showLoading() {
-    this.loadingTarget.classList.remove("hidden")
-  }
-
-  hideLoading() {
-    this.loadingTarget.classList.add("hidden")
   }
 
   clickOutside(event) {
