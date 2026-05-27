@@ -1,4 +1,20 @@
 ja:
+  devise:
+    failure:
+      unauthenticated: "ログインしてください。"
+      unconfirmed: "メールアドレスの確認が必要です。"
+      locked: "アカウントがロックされています。"
+      invalid: "メールアドレスまたはパスワードが違います。"
+      invalid_token: "認証トークンが不正です。"
+      timeout: "セッションがタイムアウトしました。もう一度ログインしてください。"
+      inactive: "アカウントが有効化されていません。"
+    sessions:
+      signed_in: "ログインしました。"
+      signed_out: "ログアウトしました。"
+    registrations:
+      signed_up: "登録が完了しました。"
+      updated: "アカウント情報を変更しました。"
+      destroyed: "アカウントを削除しました。"
   date:
     formats:
       default: "%Y/%m/%d"
