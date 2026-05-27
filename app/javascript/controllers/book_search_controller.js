@@ -48,9 +48,15 @@ export default class extends Controller {
   // 「カグラバチ 11」「【全巻】カグラバチ 1-11巻セット」→「カグラバチ」のようにベースタイトルを抽出
   extractBaseTitle(title) {
     return title
+      .normalize("NFC")
       .replace(/^【[^】]*】\s*/, "")   // 先頭の【...】を除去
-      .replace(/\s+\d.*$/, "")         // 半角スペース＋数字以降を除去
+      .replace(/[\s\u3000]+\d.*$/, "") // 半角・全角スペース＋数字以降を除去
       .trim()
+  }
+
+  // スペース・記号を除いた文字列を重複判定キーとして使う
+  normalizeKey(str) {
+    return str.normalize("NFC").replace(/[\s\u3000]/g, "").toLowerCase()
   }
 
   showResults(books) {
@@ -59,8 +65,9 @@ export default class extends Controller {
 
     for (const book of books) {
       const base = this.extractBaseTitle(book.title)
-      if (base && !seen.has(base)) {
-        seen.add(base)
+      const key = this.normalizeKey(base)
+      if (base && !seen.has(key)) {
+        seen.add(key)
         uniqueTitles.push(base)
       }
     }
