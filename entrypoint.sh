@@ -4,10 +4,12 @@ set -e
 # Rails サーバー起動時に server.pid が残っていると起動できないため削除
 rm -f /app/tmp/pids/server.pid
 
-bundle exec rails db:migrate
+# sidekiqコンテナでは db:migrate をスキップする
+if [ -z "$SKIP_MIGRATE" ]; then
+  bundle exec rails db:migrate
+fi
+
 bundle exec rails tailwindcss:build
 bundle exec rails assets:precompile
-
-bundle exec sidekiq &
 
 exec "$@"
