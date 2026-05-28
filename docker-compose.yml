@@ -36,6 +36,22 @@ services:
       timeout: 5s
       retries: 5
 
+  sidekiq:
+    build: .
+    command: bundle exec sidekiq
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+      - redis
+    env_file:
+      - .env
+    environment:
+      RAILS_ENV: development
+      DATABASE_HOST: db
+      DATABASE_USER: postgres
+      DATABASE_PASSWORD: password
+
   redis:
     image: redis:7
     volumes:
