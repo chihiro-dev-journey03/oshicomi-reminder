@@ -4,24 +4,25 @@ class LineNotificationService
   class SendError < StandardError; end
 
   def initialize
-    @client = Line::Bot::Client.new do |config|
-      config.channel_secret = ENV.fetch("LINE_MESSAGING_CHANNEL_SECRET")
-      config.channel_token  = ENV.fetch("LINE_MESSAGING_CHANNEL_ACCESS_TOKEN")
-    end
+    http_client = Line::Bot::V2::MessagingApi::ApiClient.new(
+      channel_access_token: ENV.fetch("LINE_MESSAGING_CHANNEL_ACCESS_TOKEN")
+    )
+    @api = Line::Bot::V2::MessagingApi::MessagingApiApi.new(http_client)
   end
 
   def send_reminder(reminder)
     user    = reminder.user
     book    = reminder.book
-    message = build_message(book, reminder)
 
-    response = @client.push_message(user.uid, message)
+    request = Line::Bot::V2::MessagingApi::PushMessageRequest.new(
+      to: user.uid,
+      messages: [ build_message(book, reminder) ]
+    )
 
-    unless response.is_a?(Net::HTTPSuccess)
-      raise SendError, "LINE API error: #{response.code} #{response.body}"
-    end
-
+    @api.push_message(push_message_request: request)
     true
+  rescue Line::Bot::V2::ApiError => e
+    raise SendError, "LINE API error: #{e.code} #{e.message}"
   end
 
   private
@@ -30,6 +31,6 @@ class LineNotificationService
     text = "📚 リマインダー\n「#{book.title}」の読書タイムです！"
     text += "\n\nメモ: #{reminder.memo}" if reminder.memo.present?
 
-    { type: "text", text: text }
+    Line::Bot::V2::MessagingApi::TextMessage.new(text: text)
   end
 end
