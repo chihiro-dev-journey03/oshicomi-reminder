@@ -40,7 +40,7 @@ class LineNotificationService
   end
 
   def build_message_text(book, reminder)
-    text = "📚 リマインダー\n「#{book.title}」の読書タイムです！"
+    text = "🔔「#{book.title}」の更新日です！"
     text += "\n\nメモ: #{reminder.memo}" if reminder.memo.present?
     text
   end
