@@ -1,3 +1,5 @@
+require "line/bot"
+
 class LineNotificationService
   class SendError < StandardError; end
 
