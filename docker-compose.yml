@@ -51,6 +51,7 @@ services:
       DATABASE_HOST: db
       DATABASE_USER: postgres
       DATABASE_PASSWORD: password
+      SKIP_MIGRATE: "true"
 
   redis:
     image: redis:7
