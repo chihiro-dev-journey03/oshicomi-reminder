@@ -1,36 +1,47 @@
-require "line/bot"
+require "net/http"
+require "json"
 
 class LineNotificationService
   class SendError < StandardError; end
 
-  def initialize
-    http_client = Line::Bot::V2::MessagingApi::ApiClient.new(
-      channel_access_token: ENV.fetch("LINE_MESSAGING_CHANNEL_ACCESS_TOKEN")
-    )
-    @api = Line::Bot::V2::MessagingApi::MessagingApiApi.new(http_client)
-  end
+  LINE_PUSH_URL = "https://api.line.me/v2/bot/message/push"
 
   def send_reminder(reminder)
-    user    = reminder.user
-    book    = reminder.book
+    user = reminder.user
+    book = reminder.book
 
-    request = Line::Bot::V2::MessagingApi::PushMessageRequest.new(
+    body = {
       to: user.uid,
-      messages: [ build_message(book, reminder) ]
-    )
+      messages: [ { type: "text", text: build_message_text(book, reminder) } ]
+    }.to_json
 
-    @api.push_message(push_message_request: request)
+    response = post_to_line(body)
+
+    unless response.is_a?(Net::HTTPSuccess)
+      raise SendError, "LINE API error: #{response.code} #{response.body}"
+    end
+
     true
-  rescue Line::Bot::V2::ApiError => e
-    raise SendError, "LINE API error: #{e.code} #{e.message}"
   end
 
   private
 
-  def build_message(book, reminder)
+  def post_to_line(body)
+    uri  = URI(LINE_PUSH_URL)
+    http = Net::HTTP.new(uri.host, uri.port)
+    http.use_ssl = true
+
+    request = Net::HTTP::Post.new(uri)
+    request["Content-Type"]  = "application/json"
+    request["Authorization"] = "Bearer #{ENV.fetch('LINE_MESSAGING_CHANNEL_ACCESS_TOKEN')}"
+    request.body = body
+
+    http.request(request)
+  end
+
+  def build_message_text(book, reminder)
     text = "📚 リマインダー\n「#{book.title}」の読書タイムです！"
     text += "\n\nメモ: #{reminder.memo}" if reminder.memo.present?
-
-    Line::Bot::V2::MessagingApi::TextMessage.new(text: text)
+    text
   end
 end
