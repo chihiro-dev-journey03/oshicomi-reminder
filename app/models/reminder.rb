@@ -70,7 +70,56 @@ class Reminder < ApplicationRecord
     end
   end
 
+  # 指定日（デフォルト: 今日）にこのリマインダーが発火するか判定する
+  def fires_today?(date = Date.current)
+    case recurrence_type
+    when "daily"
+      return true if recurrence_interval == 1
+
+      days_since_start = (date - created_at.to_date).to_i
+      days_since_start >= 0 && days_since_start % recurrence_interval == 0
+    when "weekly"
+      wday = date.wday
+      return false unless days_of_week & (1 << wday) > 0
+      return true if recurrence_interval == 1
+
+      weeks_since_start = (date - created_at.to_date).to_i / 7
+      weeks_since_start % recurrence_interval == 0
+    when "monthly"
+      fires_this_month_on?(date)
+    else
+      false
+    end
+  end
+
   private
+
+  def fires_this_month_on?(date)
+    matches_day = if monthly_type == "date"
+      date.day == day_of_month
+    elsif monthly_type == "weekday"
+      date.wday == weekday && nth_weekday_of_month(date) == week_of_month
+    else
+      false
+    end
+
+    return false unless matches_day
+    return true if recurrence_interval == 1
+
+    months_since_start = (date.year * 12 + date.month) - (created_at.year * 12 + created_at.month)
+    months_since_start >= 0 && months_since_start % recurrence_interval == 0
+  end
+
+  def nth_weekday_of_month(date)
+    first = date.beginning_of_month
+    count = 0
+    d = first
+    while d <= date
+      count += 1 if d.wday == date.wday
+      d += 1
+    end
+    count
+  end
 
   def recurrence_interval_within_max
     return unless recurrence_type.present? && recurrence_interval.present?

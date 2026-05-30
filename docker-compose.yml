@@ -52,6 +52,27 @@ services:
       DATABASE_USER: postgres
       DATABASE_PASSWORD: password
       SKIP_MIGRATE: "true"
+      SKIP_ASSETS: "true"
+
+  cron:
+    build: .
+    command: bash -c "bundle exec whenever --update-crontab && cron -f"
+    volumes:
+      - .:/app
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    env_file:
+      - .env
+    environment:
+      RAILS_ENV: development
+      DATABASE_HOST: db
+      DATABASE_USER: postgres
+      DATABASE_PASSWORD: password
+      SKIP_MIGRATE: "true"
+      SKIP_ASSETS: "true"
 
   redis:
     image: redis:7
