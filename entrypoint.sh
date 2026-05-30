@@ -9,7 +9,9 @@ if [ -z "$SKIP_MIGRATE" ]; then
   bundle exec rails db:migrate
 fi
 
-bundle exec rails tailwindcss:build
-bundle exec rails assets:precompile
+if [ -z "$SKIP_ASSETS" ]; then
+  bundle exec rails tailwindcss:build
+  bundle exec rails assets:precompile
+fi
 
 exec "$@"
