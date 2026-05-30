@@ -1,5 +1,6 @@
 class ReminderNotificationJob < ApplicationJob
   queue_as :reminders
+  sidekiq_options retry: 3
 
   def perform(reminder_id)
     reminder = Reminder.find_by(id: reminder_id)
@@ -10,11 +11,14 @@ class ReminderNotificationJob < ApplicationJob
     end
 
     LineNotificationService.new.send_reminder(reminder)
+    reminder.update!(status: :sent, sent_at: Time.current)
     Rails.logger.info("ReminderNotificationJob: sent successfully (reminder_id=#{reminder_id})")
   rescue LineNotificationService::SendError => e
+    reminder&.update!(status: :failed)
     Rails.logger.error("ReminderNotificationJob: LINE send failed (reminder_id=#{reminder_id}) #{e.message}")
     raise
   rescue StandardError => e
+    reminder&.update!(status: :failed)
     Rails.logger.error("ReminderNotificationJob: unexpected error (reminder_id=#{reminder_id}) #{e.message}")
     raise
   end
