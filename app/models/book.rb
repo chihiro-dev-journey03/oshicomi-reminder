@@ -1,6 +1,7 @@
 class Book < ApplicationRecord
   has_many :reminders, dependent: :destroy
   has_many :recommend_list_items, dependent: :destroy
+  has_many :recommend_lists, through: :recommend_list_items
 
   validates :title, presence: true
 
