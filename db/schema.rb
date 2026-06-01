@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_05_30_113000) do
+ActiveRecord::Schema[7.2].define(version: 2026_06_01_150030) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -20,6 +20,26 @@ ActiveRecord::Schema[7.2].define(version: 2026_05_30_113000) do
     t.string "image_url"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "recommend_list_items", force: :cascade do |t|
+    t.bigint "recommend_list_id", null: false
+    t.bigint "book_id", null: false
+    t.text "comment"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["book_id"], name: "index_recommend_list_items_on_book_id"
+    t.index ["recommend_list_id"], name: "index_recommend_list_items_on_recommend_list_id"
+  end
+
+  create_table "recommend_lists", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "title", null: false
+    t.text "description"
+    t.integer "status", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_recommend_lists_on_user_id"
   end
 
   create_table "reminders", force: :cascade do |t|
@@ -58,6 +78,9 @@ ActiveRecord::Schema[7.2].define(version: 2026_05_30_113000) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "recommend_list_items", "books"
+  add_foreign_key "recommend_list_items", "recommend_lists"
+  add_foreign_key "recommend_lists", "users"
   add_foreign_key "reminders", "books"
   add_foreign_key "reminders", "users"
 end
