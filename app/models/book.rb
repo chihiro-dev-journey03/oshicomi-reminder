@@ -23,11 +23,8 @@ class Book < ApplicationRecord
   # ベースタイトルで1件だけ登録し、楽天APIから1巻の著者・書影を補完する
   def self.find_or_create_by_base_title(title)
     normalized_title = title.to_s.strip
-    book = find_by(title: normalized_title)
-    return book if book
-
-    book = create!(title: normalized_title)
+    book = find_by(title: normalized_title) || create!(title: normalized_title)
     book.enrich_from_rakuten!
-    book
+    book.reload
   end
 end
