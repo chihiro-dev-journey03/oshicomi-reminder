@@ -22,7 +22,7 @@ class RemindersController < ApplicationController
       return render :new, status: :unprocessable_entity
     end
 
-    book = Book.find_or_create_by(title: book_title)
+    book = Book.find_or_create_by_base_title(book_title)
     @reminder = current_user.reminders.build(reminder_params)
     @reminder.book = book
     @reminder.days_of_week_array = params.dig(:reminder, :days_of_week_array) || []
@@ -61,7 +61,7 @@ class RemindersController < ApplicationController
       return render :edit, status: :unprocessable_entity
     end
 
-    book = Book.find_or_create_by(title: book_title)
+    book = Book.find_or_create_by_base_title(book_title)
     @reminder.assign_attributes(reminder_params)
     @reminder.book = book
     @reminder.days_of_week_array = params.dig(:reminder, :days_of_week_array) || []

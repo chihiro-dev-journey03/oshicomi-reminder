@@ -12,12 +12,25 @@
   <h2 class="text-lg font-bold text-gray-800 mb-3">推しコミリスト</h2>
   <div class="space-y-4">
     <% @recommend_list.recommend_list_items.each do |item| %>
-      <div class="border border-gray-200 rounded-lg p-4 bg-white">
-        <p class="font-semibold text-gray-800"><%= item.book.title %></p>
-        <p class="text-sm text-gray-500"><%= item.book.author.presence || "著者未登録" %></p>
-        <% if item.comment.present? %>
-          <p class="mt-2 text-sm text-gray-700"><%= item.comment %></p>
-        <% end %>
+      <div class="border border-gray-200 rounded-lg p-4 bg-white flex gap-4">
+        <div class="flex-shrink-0">
+          <% if item.book.image_url.present? %>
+            <%= image_tag item.book.image_url, alt: item.book.title,
+                  class: "w-16 h-24 object-cover rounded shadow-sm" %>
+          <% else %>
+            <div class="w-16 h-24 bg-gray-100 rounded flex items-center justify-center text-xs text-gray-400 text-center">
+              書影<br>なし
+            </div>
+          <% end %>
+        </div>
+
+        <div class="flex-1 min-w-0">
+          <p class="font-semibold text-gray-800"><%= item.book.title %></p>
+          <p class="text-sm text-gray-500"><%= item.book.author.presence || "著者未登録" %></p>
+          <% if item.comment.present? %>
+            <p class="mt-3 text-sm text-gray-700 border-l-2 border-green-400 pl-3 italic"><%= item.comment %></p>
+          <% end %>
+        </div>
       </div>
     <% end %>
   </div>
