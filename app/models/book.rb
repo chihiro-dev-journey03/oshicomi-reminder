@@ -12,6 +12,21 @@ class Book < ApplicationRecord
     end
   end
 
+  # author または image_url が欠けている場合、楽天APIで補完する
+  def enrich_from_rakuten!
+    return if author.present? && image_url.present?
+
+    results = RakutenBooksService.search(title)
+    return if results.empty?
+
+    update!(
+      author: author.presence || results.first[:author],
+      image_url: image_url.presence || results.first[:image_url]
+    )
+  rescue StandardError => e
+    Rails.logger.error("Book#enrich_from_rakuten! failed for '#{title}': #{e.message}")
+  end
+
   # タイトル入力（巻数なし）でも、楽天API経由で登録済みの巻数付きレコードを優先して返す
   def self.find_or_create_by_base_title(title)
     # 完全一致

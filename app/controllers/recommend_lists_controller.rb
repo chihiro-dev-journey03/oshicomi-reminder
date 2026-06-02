@@ -24,6 +24,7 @@ class RecommendListsController < ApplicationController
 
   def build_items_from_reminders
     current_user.reminders.includes(:book).map(&:book).compact.uniq(&:id).each do |book|
+      book.enrich_from_rakuten!
       @recommend_list.recommend_list_items.build(book: book)
     end
   end
