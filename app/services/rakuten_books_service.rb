@@ -31,7 +31,7 @@ class RakutenBooksService
       {
         title: item["title"],
         author: item["author"],
-        image_url: item["mediumImageUrl"]
+        image_url: item["largeImageUrl"].presence || item["mediumImageUrl"]
       }
     end
   end

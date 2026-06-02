@@ -46,9 +46,9 @@
                 <div class="flex-shrink-0">
                   <% if book.image_url.present? %>
                     <%= image_tag book.image_url, alt: book.title,
-                          class: "w-16 h-24 object-cover rounded shadow-sm" %>
+                          class: "w-20 h-28 shrink-0 object-cover rounded shadow-sm" %>
                   <% else %>
-                    <div class="w-16 h-24 bg-gray-100 rounded flex items-center justify-center text-xs text-gray-400 text-center">
+                    <div class="w-20 h-28 bg-gray-100 rounded flex items-center justify-center text-xs text-gray-400 text-center">
                       書影<br>なし
                     </div>
                   <% end %>
