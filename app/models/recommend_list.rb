@@ -6,7 +6,13 @@ class RecommendList < ApplicationRecord
 
   accepts_nested_attributes_for :recommend_list_items
 
-  enum :status, { draft: 0, private: 1, public: 2 }
+  enum :status, { draft: 0, closed: 1, published: 2 }
+
+  STATUS_LABELS = { draft: "下書き", closed: "非公開", published: "公開" }.freeze
+
+  def status_label
+    STATUS_LABELS[status.to_sym]
+  end
 
   validates :title, presence: true
 end
