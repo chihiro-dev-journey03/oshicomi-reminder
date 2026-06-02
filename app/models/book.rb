@@ -12,16 +12,21 @@ class Book < ApplicationRecord
     end
   end
 
-  # author または image_url が欠けている場合、楽天APIで補完する
+  # author または image_url が欠けている場合、楽天APIで1巻の情報を補完する
   def enrich_from_rakuten!
     return if author.present? && image_url.present?
 
-    results = RakutenBooksService.search(title)
+    # 「タイトル 1」で検索して1巻を狙い打ちにする。ヒットしなければタイトルのみで再検索
+    results = RakutenBooksService.search("#{title} 1")
+    results = RakutenBooksService.search(title) if results.empty?
     return if results.empty?
 
+    # タイトルが最も短いものを1巻として採用
+    chosen = results.min_by { |r| r[:title].length }
+
     update!(
-      author: author.presence || results.first[:author],
-      image_url: image_url.presence || results.first[:image_url]
+      author: author.presence || chosen[:author],
+      image_url: image_url.presence || chosen[:image_url]
     )
   rescue StandardError => e
     Rails.logger.error("Book#enrich_from_rakuten! failed for '#{title}': #{e.message}")
@@ -39,7 +44,9 @@ class Book < ApplicationRecord
              .first
     return book if book
 
-    # 見つからなければ新規作成
-    create!(title: title)
+    # 見つからなければ新規作成し、すぐにRakutenで補完する
+    book = create!(title: title)
+    book.enrich_from_rakuten!
+    book
   end
 end
