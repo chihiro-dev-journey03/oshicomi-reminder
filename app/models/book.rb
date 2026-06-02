@@ -5,13 +5,6 @@ class Book < ApplicationRecord
 
   validates :title, presence: true
 
-  def self.find_or_create_from_rakuten(book_data)
-    find_or_create_by(title: book_data[:title]) do |book|
-      book.author = book_data[:author]
-      book.image_url = book_data[:image_url]
-    end
-  end
-
   # author または image_url が欠けている場合、楽天APIから1巻の情報を補完する
   def enrich_from_rakuten!
     return if author.present? && image_url.present?
@@ -27,20 +20,13 @@ class Book < ApplicationRecord
     Rails.logger.error("Book#enrich_from_rakuten! failed for '#{title}': #{e.message}")
   end
 
-  # タイトル入力（巻数なし）でも、楽天API経由で登録済みの巻数付きレコードを優先して返す
+  # ベースタイトルで1件だけ登録し、楽天APIから1巻の著者・書影を補完する
   def self.find_or_create_by_base_title(title)
-    # 完全一致
-    book = find_by(title: title)
+    normalized_title = title.to_s.strip
+    book = find_by(title: normalized_title)
     return book if book
 
-    # 巻数付きレコードを探す（タイトルが「入力値 」で始まるもの、巻数が小さい順）
-    book = where("title LIKE ?", "#{sanitize_sql_like(title)} %")
-             .order(Arel.sql("LENGTH(title) ASC"))
-             .first
-    return book if book
-
-    # 見つからなければ新規作成し、すぐにRakutenで補完する
-    book = create!(title: title)
+    book = create!(title: normalized_title)
     book.enrich_from_rakuten!
     book
   end

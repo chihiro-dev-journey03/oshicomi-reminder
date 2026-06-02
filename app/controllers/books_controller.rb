@@ -8,19 +8,9 @@ class BooksController < ApplicationController
       return render json: { error: "キーワードを入力してください" }, status: :unprocessable_entity
     end
 
-    book_data_list = RakutenBooksService.search(keyword)
+    # 候補表示用。DBには保存せず楽天APIの結果をそのまま返す（登録はリマインダー保存時）
+    books = RakutenBooksService.search(keyword)
 
-    books = book_data_list.map do |book_data|
-      Book.find_or_create_from_rakuten(book_data)
-    end
-
-    render json: books.map { |book|
-      {
-        id: book.id,
-        title: book.title,
-        author: book.author,
-        image_url: book.image_url
-      }
-    }
+    render json: books
   end
 end
