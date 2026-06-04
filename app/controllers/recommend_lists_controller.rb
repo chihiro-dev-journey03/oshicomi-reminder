@@ -1,5 +1,7 @@
 class RecommendListsController < ApplicationController
   before_action :authenticate_user!
+  before_action :set_recommend_list, only: [ :show, :edit, :update, :destroy ]
+  before_action :authorize_owner!, only: [ :edit, :update, :destroy ]
 
   def new
     @recommend_list = current_user.recommend_lists.build(status: :draft)
@@ -17,10 +19,36 @@ class RecommendListsController < ApplicationController
   end
 
   def show
-    @recommend_list = RecommendList.includes(recommend_list_items: :book).find(params[:id])
+  end
+
+  def edit
+    @available_books = available_books_for_addition
+  end
+
+  def update
+    if @recommend_list.update(recommend_list_params)
+      add_books_from_params
+      redirect_to @recommend_list, notice: "推しコミリストを更新しました"
+    else
+      @available_books = available_books_for_addition
+      render :edit, status: :unprocessable_entity
+    end
+  end
+
+  def destroy
+    @recommend_list.destroy
+    redirect_to root_path, notice: "推しコミリストを削除しました"
   end
 
   private
+
+  def set_recommend_list
+    @recommend_list = RecommendList.includes(recommend_list_items: :book).find(params[:id])
+  end
+
+  def authorize_owner!
+    redirect_to root_path, alert: "権限がありません" unless @recommend_list.user == current_user
+  end
 
   def build_items_from_reminders
     current_user.reminders.includes(:book).map(&:book).compact.uniq(&:id).each do |book|
@@ -29,11 +57,26 @@ class RecommendListsController < ApplicationController
     end
   end
 
+  def available_books_for_addition
+    existing_book_ids = @recommend_list.recommend_list_items.map(&:book_id)
+    current_user.reminders.includes(:book).map(&:book).compact.uniq(&:id).reject do |book|
+      existing_book_ids.include?(book.id)
+    end
+  end
+
+  def add_books_from_params
+    return if params[:add_book_ids].blank?
+
+    params[:add_book_ids].each do |book_id|
+      @recommend_list.recommend_list_items.find_or_create_by(book_id: book_id)
+    end
+  end
+
   def recommend_list_params
     params.require(:recommend_list).permit(
       :title,
       :description,
-      recommend_list_items_attributes: [ :book_id, :comment ]
+      recommend_list_items_attributes: [ :id, :book_id, :comment, :_destroy ]
     )
   end
 end
