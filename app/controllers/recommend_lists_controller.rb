@@ -68,7 +68,10 @@ class RecommendListsController < ApplicationController
     return if params[:add_book_ids].blank?
 
     params[:add_book_ids].each do |book_id|
-      @recommend_list.recommend_list_items.find_or_create_by(book_id: book_id)
+      comment = params.dig(:add_book_comments, book_id)
+      @recommend_list.recommend_list_items.find_or_create_by(book_id: book_id) do |item|
+        item.comment = comment
+      end
     end
   end
 

@@ -98,9 +98,14 @@
                 <% end %>
               </div>
 
-              <div class="flex-1 min-w-0 flex flex-col justify-center">
+              <div class="flex-1 min-w-0">
                 <p class="font-semibold text-gray-800 truncate"><%= book.title %></p>
                 <p class="text-sm text-gray-500 mb-3"><%= book.author.presence || "著者未登録" %></p>
+
+                <label class="block text-sm font-medium text-gray-700 mb-1">一言コメント</label>
+                <input type="text"
+                       name="add_book_comments[<%= book.id %>]"
+                       class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-400 mb-3">
 
                 <div class="flex items-center gap-2">
                   <input type="checkbox"
