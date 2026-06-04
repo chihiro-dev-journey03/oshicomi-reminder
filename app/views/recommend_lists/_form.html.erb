@@ -1,0 +1,132 @@
+<%= form_with model: recommend_list do |f| %>
+  <% editing = recommend_list.persisted? %>
+
+  <% if recommend_list.errors.any? %>
+    <div class="rounded-lg bg-red-50 border border-red-200 px-4 py-3 mb-5">
+      <ul class="list-disc list-inside text-sm text-red-600 space-y-1">
+        <% recommend_list.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="space-y-5">
+    <div>
+      <%= f.label :title, "タイトル", class: "block text-sm font-medium text-gray-700 mb-1" %>
+      <%= f.text_field :title,
+            required: true,
+            class: "w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-400" %>
+    </div>
+
+    <div>
+      <%= f.label :description, "説明文", class: "block text-sm font-medium text-gray-700 mb-1" %>
+      <%= f.text_area :description,
+            rows: 3,
+            class: "w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-400 resize-none" %>
+    </div>
+
+    <div>
+      <h2 class="text-lg font-bold text-gray-800 mb-3">推しコミリスト</h2>
+
+      <% if recommend_list.recommend_list_items.none? { |item| item.book.present? } %>
+        <p class="text-sm text-gray-500">
+          <%= editing ? "リストにアイテムがありません" : "リマインダーに登録された作品がありません" %>
+        </p>
+      <% else %>
+        <div class="space-y-4">
+          <%= f.fields_for :recommend_list_items do |item_fields| %>
+            <% book = item_fields.object.book %>
+            <% next unless book %>
+
+            <div class="border border-gray-200 rounded-lg p-4 bg-white flex gap-4">
+              <%= item_fields.hidden_field :book_id %>
+
+              <div class="flex-shrink-0">
+                <% if book.image_url.present? %>
+                  <%= image_tag book.image_url, alt: book.title,
+                        class: "w-20 h-28 object-cover rounded shadow-sm" %>
+                <% else %>
+                  <div class="w-20 h-28 bg-gray-100 rounded flex items-center justify-center text-xs text-gray-400 text-center">
+                    書影<br>なし
+                  </div>
+                <% end %>
+              </div>
+
+              <div class="flex-1 min-w-0">
+                <p class="font-semibold text-gray-800 truncate"><%= book.title %></p>
+                <p class="text-sm text-gray-500 mb-3"><%= book.author.presence || "著者未登録" %></p>
+
+                <%= item_fields.label :comment, "一言コメント", class: "block text-sm font-medium text-gray-700 mb-1" %>
+                <%= item_fields.text_field :comment,
+                      class: "w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-400" %>
+
+                <% if item_fields.object.persisted? %>
+                  <div class="mt-3 flex items-center gap-2">
+                    <%= item_fields.check_box :_destroy,
+                          { class: "w-4 h-4 text-red-500 border-gray-300 rounded cursor-pointer",
+                            id: "destroy_item_#{item_fields.object.id}" },
+                          "1", "0" %>
+                    <%= item_fields.label :_destroy, "リストから削除する",
+                          for: "destroy_item_#{item_fields.object.id}",
+                          class: "text-sm text-red-500 cursor-pointer" %>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+
+    <% if available_books.any? %>
+      <div>
+        <h2 class="text-lg font-bold text-gray-800 mb-1">リマインダーから追加</h2>
+        <p class="text-sm text-gray-500 mb-3">チェックをつけると既存リストに追加されます</p>
+
+        <div class="space-y-4">
+          <% available_books.each do |book| %>
+            <div class="border border-dashed border-gray-300 rounded-lg p-4 bg-gray-50 flex gap-4">
+              <div class="flex-shrink-0">
+                <% if book.image_url.present? %>
+                  <%= image_tag book.image_url, alt: book.title,
+                        class: "w-20 h-28 object-cover rounded shadow-sm" %>
+                <% else %>
+                  <div class="w-20 h-28 bg-gray-100 rounded flex items-center justify-center text-xs text-gray-400 text-center">
+                    書影<br>なし
+                  </div>
+                <% end %>
+              </div>
+
+              <div class="flex-1 min-w-0 flex flex-col justify-center">
+                <p class="font-semibold text-gray-800 truncate"><%= book.title %></p>
+                <p class="text-sm text-gray-500 mb-3"><%= book.author.presence || "著者未登録" %></p>
+
+                <div class="flex items-center gap-2">
+                  <input type="checkbox"
+                         name="add_book_ids[]"
+                         value="<%= book.id %>"
+                         id="add_book_<%= book.id %>"
+                         class="w-4 h-4 text-green-500 border-gray-300 rounded cursor-pointer">
+                  <label for="add_book_<%= book.id %>" class="text-sm text-green-600 cursor-pointer font-medium">
+                    リストに追加する
+                  </label>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="mt-6 flex gap-3">
+    <%= f.submit (editing ? "更新する" : "作成する"),
+          style: "background-color:#22c55e; color:white;",
+          class: "px-6 py-2 text-sm font-medium rounded-full hover:opacity-90 transition cursor-pointer" %>
+    <% if editing %>
+      <%= link_to "キャンセル", recommend_list,
+            class: "px-6 py-2 text-sm font-medium text-gray-600 border border-gray-300 rounded-full hover:bg-gray-50 transition" %>
+    <% end %>
+  </div>
+<% end %>
