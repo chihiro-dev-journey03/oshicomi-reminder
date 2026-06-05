@@ -1,4 +1,6 @@
 class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
+  skip_before_action :authenticate_user!
+
   def line
     auth = request.env["omniauth.auth"]
     @user = User.find_or_create_from_omniauth(auth)
