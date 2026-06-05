@@ -1,0 +1,62 @@
+<% content_for :title, "みんなの推しコミリスト" %>
+
+<div class="w-full max-w-4xl mx-auto py-10 px-4">
+  <h1 class="text-4xl font-bold mb-8" style="color:#22c55e;">みんなの推しコミリスト</h1>
+
+  <% if @recommend_lists.empty? %>
+    <p class="text-center text-gray-400 py-16 text-lg">公開中の推しコミリストはまだありません</p>
+  <% else %>
+    <div class="grid grid-cols-2 gap-6">
+      <% @recommend_lists.each do |list| %>
+          <div class="relative border border-gray-200 rounded-xl bg-white overflow-hidden hover:shadow-lg transition flex flex-col">
+          <% if user_signed_in? && list.user == current_user %>
+            <div class="absolute flex gap-1.5 z-10" style="top: 0.75rem; right: 0.75rem;">
+              <%= link_to "編集", edit_recommend_list_path(list),
+                    class: "px-2.5 py-1 text-xs font-medium text-white rounded-full hover:opacity-90 transition",
+                    style: "background-color:#22c55e;" %>
+              <%= link_to "削除", list,
+                    data: { turbo_method: :delete, turbo_confirm: "「#{list.title}」を削除しますか？\nこの操作は取り消せません。" },
+                    class: "px-2.5 py-1 text-xs font-medium text-white rounded-full hover:opacity-90 transition",
+                    style: "background-color:#ef4444;" %>
+            </div>
+          <% end %>
+          <%= link_to recommend_list_path(list), class: "block p-5 flex-1" do %>
+            <h2 class="text-xl font-bold text-gray-800 mb-1 leading-snug"><%= list.title %></h2>
+            <% if list.description.present? %>
+              <p class="text-sm text-gray-500 line-clamp-2 mb-4"><%= list.description %></p>
+            <% else %>
+              <div class="mb-4"></div>
+            <% end %>
+
+            <%# 最初の3冊のサムネイル %>
+            <% books = list.recommend_list_items.map(&:book).compact.first(3) %>
+            <div class="flex gap-3">
+              <% books.each do |book| %>
+                <% if book.image_url.present? %>
+                  <%= image_tag book.large_image_url, alt: book.title,
+                        class: "flex-shrink-0 object-cover rounded-md shadow",
+                        style: "width: 110px; height: 154px;" %>
+                <% else %>
+                  <div class="flex-shrink-0 bg-gray-100 rounded-md flex items-center justify-center text-xs text-gray-400 text-center shadow"
+                       style="width: 110px; height: 154px;">
+                    書影<br>なし
+                  </div>
+                <% end %>
+              <% end %>
+              <% if books.empty? %>
+                <p class="text-sm text-gray-400 self-center">作品未登録</p>
+              <% end %>
+            </div>
+          <% end %>
+
+          <div class="px-5 pb-4 flex items-center gap-2 text-sm text-gray-400">
+            <span class="font-medium text-gray-600"><%= list.user.name %></span>
+            <span>・</span>
+            <span><%= l list.created_at, format: :long %></span>
+          </div>
+
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+</div>

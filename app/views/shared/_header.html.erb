@@ -5,13 +5,15 @@
     <% end %>
 
     <nav>
-      <% if user_signed_in? %>
-        <div class="flex items-center gap-4">
+      <div class="flex items-center gap-4">
+        <%= link_to "みんなの推しコミリスト", recommend_lists_path,
+              class: "text-sm text-gray-600 hover:text-green-600 transition" %>
+        <% if user_signed_in? %>
           <span class="text-sm text-gray-600"><%= current_user.name %> さん</span>
           <%= button_to "ログアウト", destroy_user_session_path, method: :delete,
                 class: "px-4 py-2 text-sm bg-gray-100 text-gray-600 rounded-full hover:bg-gray-200 transition" %>
-        </div>
-      <% end %>
+        <% end %>
+      </div>
     </nav>
   </div>
 </header>
