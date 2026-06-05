@@ -12,8 +12,10 @@
           <%= link_to "マイ推しコミリスト", my_lists_recommend_lists_path,
                 class: "text-sm text-gray-600 hover:text-green-600 transition" %>
         <% end %>
-        <%= link_to "みんなの推しコミリスト", recommend_lists_path,
-              class: "text-sm text-gray-600 hover:text-green-600 transition" %>
+        <% if user_signed_in? %>
+          <%= link_to "みんなの推しコミリスト", recommend_lists_path,
+                class: "text-sm text-gray-600 hover:text-green-600 transition" %>
+        <% end %>
         <% if user_signed_in? %>
           <span class="text-sm text-gray-600"><%= current_user.name %> さん</span>
           <%= button_to "ログアウト", destroy_user_session_path, method: :delete,
