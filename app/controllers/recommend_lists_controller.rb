@@ -9,6 +9,12 @@ class RecommendListsController < ApplicationController
                                     .order(created_at: :desc)
   end
 
+  def my_lists
+    @recommend_lists = current_user.recommend_lists
+                                   .includes(recommend_list_items: :book)
+                                   .order(created_at: :desc)
+  end
+
   def new
     @recommend_list = current_user.recommend_lists.build(status: :draft)
     build_items_from_reminders
@@ -46,7 +52,7 @@ class RecommendListsController < ApplicationController
 
   def destroy
     @recommend_list.destroy
-    redirect_to root_path, notice: "推しコミリストを削除しました"
+    redirect_to my_lists_recommend_lists_path, notice: "推しコミリストを削除しました"
   end
 
   private
