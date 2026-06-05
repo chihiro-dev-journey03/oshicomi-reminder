@@ -1,5 +1,5 @@
 class RecommendListsController < ApplicationController
-  before_action :authenticate_user!
+  before_action :authenticate_user!, except: [ :show ]
   before_action :set_recommend_list, only: [ :show, :edit, :update, :destroy ]
   before_action :authorize_owner!, only: [ :edit, :update, :destroy ]
 
@@ -19,6 +19,9 @@ class RecommendListsController < ApplicationController
   end
 
   def show
+    unless @recommend_list.published? || (user_signed_in? && @recommend_list.user == current_user)
+      redirect_to root_path, alert: "このリストは公開されていません"
+    end
   end
 
   def edit
