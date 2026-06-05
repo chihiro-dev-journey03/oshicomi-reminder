@@ -3,7 +3,11 @@ Rails.application.routes.draw do
   root "static_pages#top"
 
   resources :reminders, only: [ :index, :new, :create, :edit, :update, :destroy ]
-  resources :recommend_lists, only: [ :index, :new, :create, :show, :edit, :update, :destroy ]
+  resources :recommend_lists, only: [ :index, :new, :create, :show, :edit, :update, :destroy ] do
+    collection do
+      get :my_lists
+    end
+  end
 
   resources :books, only: [] do
     collection do

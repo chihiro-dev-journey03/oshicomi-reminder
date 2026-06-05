@@ -74,17 +74,17 @@
                 <%= item_fields.text_field :comment,
                       class: "w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-400" %>
 
-                <% if item_fields.object.persisted? %>
-                  <div class="mt-3 flex items-center gap-2">
-                    <%= item_fields.check_box :_destroy,
-                          { class: "w-4 h-4 text-red-500 border-gray-300 rounded cursor-pointer",
-                            id: "destroy_item_#{item_fields.object.id}" },
-                          "1", "0" %>
-                    <%= item_fields.label :_destroy, "リストから削除する",
-                          for: "destroy_item_#{item_fields.object.id}",
-                          class: "text-sm text-red-500 cursor-pointer" %>
-                  </div>
-                <% end %>
+                <% item_id = item_fields.object.persisted? ? item_fields.object.id : item_fields.index %>
+                <div class="mt-3 flex items-center gap-2">
+                  <%= item_fields.check_box :_destroy,
+                        { class: "w-4 h-4 text-red-500 border-gray-300 rounded cursor-pointer",
+                          id: "destroy_item_#{item_id}" },
+                        "1", "0" %>
+                  <%= item_fields.label :_destroy,
+                        item_fields.object.persisted? ? "リストから削除する" : "リストから外す",
+                        for: "destroy_item_#{item_id}",
+                        class: "text-sm text-red-500 cursor-pointer" %>
+                </div>
               </div>
             </div>
           <% end %>
