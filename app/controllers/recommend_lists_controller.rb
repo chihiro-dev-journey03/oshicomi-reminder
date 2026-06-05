@@ -1,5 +1,5 @@
 class RecommendListsController < ApplicationController
-  before_action :authenticate_user!, except: [ :index, :show ]
+  skip_before_action :authenticate_user!, only: [ :index, :show ]
   before_action :set_recommend_list, only: [ :show, :edit, :update, :destroy ]
   before_action :authorize_owner!, only: [ :edit, :update, :destroy ]
 
