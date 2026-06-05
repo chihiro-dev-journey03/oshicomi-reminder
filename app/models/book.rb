@@ -5,6 +5,11 @@ class Book < ApplicationRecord
 
   validates :title, presence: true
 
+  def large_image_url
+    return nil unless image_url.present?
+    image_url.gsub(/_ex=\d+x\d+/, "_ex=200x200")
+  end
+
   # author または image_url が欠けている場合、楽天APIから1巻の情報を補完する
   def enrich_from_rakuten!
     return if author.present? && image_url.present?

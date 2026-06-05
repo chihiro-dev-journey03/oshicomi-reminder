@@ -1,7 +1,13 @@
 class RecommendListsController < ApplicationController
-  before_action :authenticate_user!, except: [ :show ]
+  before_action :authenticate_user!, except: [ :index, :show ]
   before_action :set_recommend_list, only: [ :show, :edit, :update, :destroy ]
   before_action :authorize_owner!, only: [ :edit, :update, :destroy ]
+
+  def index
+    @recommend_lists = RecommendList.published
+                                    .includes(:user, recommend_list_items: :book)
+                                    .order(created_at: :desc)
+  end
 
   def new
     @recommend_list = current_user.recommend_lists.build(status: :draft)
