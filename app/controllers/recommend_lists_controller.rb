@@ -79,6 +79,7 @@ class RecommendListsController < ApplicationController
     params.require(:recommend_list).permit(
       :title,
       :description,
+      :status,
       recommend_list_items_attributes: [ :id, :book_id, :comment, :_destroy ]
     )
   end
