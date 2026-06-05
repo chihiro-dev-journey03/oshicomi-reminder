@@ -13,6 +13,19 @@
 
   <div class="space-y-5">
     <div>
+      <%= f.label :status, "公開設定", class: "block text-sm font-medium text-gray-700 mb-2" %>
+      <div class="flex gap-4">
+        <% RecommendList::STATUS_LABELS.each do |status_key, label| %>
+          <label class="flex items-center gap-2 cursor-pointer">
+            <%= f.radio_button :status, status_key,
+                  class: "w-4 h-4 text-green-500 border-gray-300 cursor-pointer" %>
+            <span class="text-sm text-gray-700"><%= label %></span>
+          </label>
+        <% end %>
+      </div>
+    </div>
+
+    <div>
       <%= f.label :title, "タイトル", class: "block text-sm font-medium text-gray-700 mb-1" %>
       <%= f.text_field :title,
             required: true,
