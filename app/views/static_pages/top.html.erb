@@ -4,25 +4,14 @@
     <p class="text-gray-600 text-lg mb-2">お気に入りのWeb漫画の更新日をLINEで受け取ろう</p>
 
     <div class="mt-8 flex flex-col items-center gap-6">
-      <div class="flex items-center gap-4">
-        <%= button_to user_line_omniauth_authorize_path,
-              data: { turbo: false },
-              class: "inline-flex items-center gap-3 px-8 py-4 bg-[#06C755] text-white font-bold rounded-full shadow hover:opacity-90 transition" do %>
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
-            <path d="M12 2C6.48 2 2 5.92 2 10.72c0 3.27 2.05 6.15 5.14 7.79-.2.73-.74 2.66-.85 3.07-.13.5.18.49.38.36.16-.1 2.5-1.7 3.52-2.38.58.08 1.18.13 1.81.13 5.52 0 10-3.92 10-8.77C22 5.92 17.52 2 12 2z"/>
-          </svg>
-          LINEで会員登録
-        <% end %>
-
-        <%= button_to user_line_omniauth_authorize_path,
-              data: { turbo: false },
-              class: "inline-flex items-center gap-3 px-8 py-4 bg-white text-[#06C755] font-bold border-2 border-[#06C755] rounded-full shadow hover:bg-green-50 transition" do %>
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
-            <path d="M12 2C6.48 2 2 5.92 2 10.72c0 3.27 2.05 6.15 5.14 7.79-.2.73-.74 2.66-.85 3.07-.13.5.18.49.38.36.16-.1 2.5-1.7 3.52-2.38.58.08 1.18.13 1.81.13 5.52 0 10-3.92 10-8.77C22 5.92 17.52 2 12 2z"/>
-          </svg>
-          LINEでログイン
-        <% end %>
-      </div>
+      <%= button_to user_line_omniauth_authorize_path,
+            data: { turbo: false },
+            class: "inline-flex items-center gap-3 px-8 py-4 bg-[#06C755] text-white font-bold rounded-full shadow hover:opacity-90 transition" do %>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+          <path d="M12 2C6.48 2 2 5.92 2 10.72c0 3.27 2.05 6.15 5.14 7.79-.2.73-.74 2.66-.85 3.07-.13.5.18.49.38.36.16-.1 2.5-1.7 3.52-2.38.58.08 1.18.13 1.81.13 5.52 0 10-3.92 10-8.77C22 5.92 17.52 2 12 2z"/>
+        </svg>
+        LINEでログイン
+      <% end %>
 
       <%= link_to recommend_lists_path,
             class: "inline-flex items-center gap-2 px-8 py-4 bg-white text-green-600 text-base font-bold border-2 border-green-300 rounded-full shadow hover:bg-green-50 hover:border-green-500 transition" do %>
