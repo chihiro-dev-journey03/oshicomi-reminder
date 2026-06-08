@@ -9,7 +9,7 @@ ja:
       timeout: "セッションがタイムアウトしました。もう一度ログインしてください。"
       inactive: "アカウントが有効化されていません。"
     omniauth_callbacks:
-      success: "%{kind}アカウントでログインしました。"
+      success: "ログインしました。"
       failure: "%{kind}アカウントによる認証に失敗しました。"
     sessions:
       signed_in: "ログインしました。"
