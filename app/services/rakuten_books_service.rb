@@ -4,19 +4,25 @@ class RakutenBooksService
   ENRICH_MAX_RESULTS = 30
 
   def self.search(keyword, hits: MAX_RESULTS)
+    if ENV["RAKUTEN_APP_ID"].blank? || ENV["RAKUTEN_ACCESS_KEY"].blank?
+      Rails.logger.error("RakutenBooksService: RAKUTEN_APP_ID または RAKUTEN_ACCESS_KEY が未設定です")
+      return []
+    end
+
     uri = URI(API_URL)
     uri.query = URI.encode_www_form(
       applicationId: ENV["RAKUTEN_APP_ID"],
       accessKey: ENV["RAKUTEN_ACCESS_KEY"],
       title: keyword,
+      format: "json",
       formatVersion: 2,
       hits: hits
     )
 
     response = Net::HTTP.get_response(uri)
     unless response.is_a?(Net::HTTPSuccess)
-      Rails.logger.error("Rakuten API response body: #{response.body}")
-      raise "Rakuten API error: #{response.code}"
+      Rails.logger.error("RakutenBooksService: API error #{response.code} - #{response.body}")
+      return []
     end
 
     data = JSON.parse(response.body)
