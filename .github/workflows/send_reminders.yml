@@ -1,0 +1,16 @@
+name: Send Reminders
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+
+jobs:
+  send_reminders:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger reminder send
+        run: |
+          curl -sf -X POST \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            "https://oshicomi-reminder.onrender.com/internal/reminders/send_due"
