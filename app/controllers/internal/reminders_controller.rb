@@ -15,7 +15,7 @@ module Internal
       provided = request.headers["Authorization"]&.split(" ", 2)&.last
 
       return head :unauthorized if expected.blank? || provided.blank?
-      return head :unauthorized unless ActiveSupport::SecurityUtils.secure_compare(provided, expected)
+      head :unauthorized unless ActiveSupport::SecurityUtils.secure_compare(provided, expected)
     end
   end
 end
