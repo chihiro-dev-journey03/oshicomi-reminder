@@ -9,8 +9,6 @@ services:
     depends_on:
       db:
         condition: service_healthy
-      redis:
-        condition: service_started
     env_file:
       - .env
     environment:
@@ -36,51 +34,5 @@ services:
       timeout: 5s
       retries: 5
 
-  sidekiq:
-    build: .
-    command: bundle exec sidekiq
-    volumes:
-      - .:/app
-    depends_on:
-      - db
-      - redis
-    env_file:
-      - .env
-    environment:
-      RAILS_ENV: development
-      DATABASE_HOST: db
-      DATABASE_USER: postgres
-      DATABASE_PASSWORD: password
-      SKIP_MIGRATE: "true"
-      SKIP_ASSETS: "true"
-
-  cron:
-    build: .
-    command: bash -c "bundle exec whenever --update-crontab && cron -f"
-    volumes:
-      - .:/app
-    depends_on:
-      db:
-        condition: service_healthy
-      redis:
-        condition: service_started
-    env_file:
-      - .env
-    environment:
-      RAILS_ENV: development
-      DATABASE_HOST: db
-      DATABASE_USER: postgres
-      DATABASE_PASSWORD: password
-      SKIP_MIGRATE: "true"
-      SKIP_ASSETS: "true"
-
-  redis:
-    image: redis:7
-    volumes:
-      - redis_data:/data
-    ports:
-      - "6379:6379"
-
 volumes:
   postgres_data:
-  redis_data:

@@ -13,7 +13,6 @@ RUN apt-get update -qq && apt-get install -y \
     build-essential \
     libpq-dev \
     postgresql-client \
-    cron \
     && rm -rf /var/lib/apt/lists/*
 
 # 作業ディレクトリを設定
