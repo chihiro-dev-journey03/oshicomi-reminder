@@ -13,7 +13,7 @@
     <meta property="og:description" content="<%= content_for(:description) || "推しのコミックスの発売リマインダーサービス" %>">
     <meta property="og:type" content="<%= content_for(:og_type) || "website" %>">
     <meta property="og:url" content="https://oshicomi-reminder.com<%= request.path %>">
-    <meta property="og:image" content="<%= content_for(:og_image) || image_url("ogp.png") %>">
+    <% if content_for?(:og_image) %><meta property="og:image" content="<%= yield :og_image %>"><% end %>
     <meta name="twitter:card" content="summary_large_image">
 
     <%= yield :head %>
