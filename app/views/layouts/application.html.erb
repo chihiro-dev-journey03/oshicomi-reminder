@@ -1,11 +1,20 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= content_for(:title) || "App" %></title>
+    <title><%= content_for(:title) || "推しコミリマインダー" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
+
+    <%# OGP %>
+    <meta property="og:site_name" content="推しコミリマインダー">
+    <meta property="og:title" content="<%= content_for(:title) || "推しコミリマインダー" %>">
+    <meta property="og:description" content="<%= content_for(:description) || "推しのコミックスの発売リマインダーサービス" %>">
+    <meta property="og:type" content="<%= content_for(:og_type) || "website" %>">
+    <meta property="og:url" content="https://oshicomi-reminder.com<%= request.path %>">
+    <meta property="og:image" content="<%= content_for(:og_image) || image_url("ogp.png") %>">
+    <meta name="twitter:card" content="summary_large_image">
 
     <%= yield :head %>
 
