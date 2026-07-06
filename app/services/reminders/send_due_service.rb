@@ -5,18 +5,19 @@ module Reminders
     def initialize(now: Time.current)
       @now = now
     end
-
     def call
+      due_reminders = Reminder.includes(:user, :book).select { |r| due?(r) }
+      grouped = due_reminders.group_by(&:user_id)
+
       sent_count = 0
       failed_count = 0
 
-      Reminder.includes(:user, :book).find_each do |reminder|
-        next unless due?(reminder)
-
-        if send_reminder(reminder)
-          sent_count += 1
+      grouped.each_value do |reminders|
+        user = reminders.first.user
+        if send_email(user, reminders)
+          sent_count += reminders.size
         else
-          failed_count += 1
+          failed_count += reminders.size
         end
       end
 
@@ -45,18 +46,14 @@ module Reminders
       reminder.sent_at&.to_date == Date.current
     end
 
-    def send_reminder(reminder)
-      LineNotificationService.new.send_reminder(reminder)
-      reminder.update!(status: :sent, sent_at: Time.current)
-      Rails.logger.info("[Reminders::SendDueService] sent reminder_id=#{reminder.id}")
+    def send_email(user, reminders)
+      ReminderMailer.due_reminders(user, reminders).deliver_now
+      reminders.each { |r| r.update!(status: :sent, sent_at: Time.current) }
+      Rails.logger.info("[Reminders::SendDueService] sent email user_id=#{user.id} count=#{reminders.size}")
       true
-    rescue LineNotificationService::SendError => e
-      reminder.update!(status: :failed)
-      Rails.logger.error("[Reminders::SendDueService] LINE send failed reminder_id=#{reminder.id} #{e.message}")
-      false
     rescue StandardError => e
-      reminder.update!(status: :failed)
-      Rails.logger.error("[Reminders::SendDueService] unexpected error reminder_id=#{reminder.id} #{e.message}")
+      reminders.each { |r| r.update!(status: :failed) }
+      Rails.logger.error("[Reminders::SendDueService] email send failed user_id=#{user.id} #{e.message}")
       false
     end
   end

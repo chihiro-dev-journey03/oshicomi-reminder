@@ -36,6 +36,8 @@ gem "bootsnap", require: false
 
 gem "line-bot-api"
 
+gem "resend"
+
 gem "devise"
 gem "omniauth"
 gem "omniauth-line"

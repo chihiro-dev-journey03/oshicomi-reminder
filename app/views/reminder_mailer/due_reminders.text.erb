@@ -1,0 +1,12 @@
+<%= @user.name %> さん、本日のリマインダー通知です。
+
+========================================
+<% @reminders.each do |reminder| %>
+【<%= reminder.book.title %>】
+<% if reminder.book.author.present? %>著者：<%= reminder.book.author %>
+<% end %><% if reminder.memo.present? %>メモ：<%= reminder.memo %>
+<% end %>
+----------------------------------------
+<% end %>
+
+このメールは推しコミリマインダーから自動送信されています。
