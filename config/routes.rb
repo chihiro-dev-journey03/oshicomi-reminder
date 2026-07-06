@@ -15,6 +15,8 @@ Rails.application.routes.draw do
     end
   end
 
+  resource :profile, only: [:show, :edit, :update], module: :users
+
   namespace :internal do
     post "reminders/send_due", to: "reminders#send_due"
   end

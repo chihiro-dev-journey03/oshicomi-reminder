@@ -1,0 +1,23 @@
+<% content_for :title, "マイページ" %>
+
+<div class="max-w-xl mx-auto py-8">
+  <h1 class="text-2xl font-bold text-gray-800 mb-6">マイページ</h1>
+
+  <div class="bg-white rounded-xl shadow p-6 space-y-4">
+    <div>
+      <p class="text-sm text-gray-500">お名前</p>
+      <p class="text-lg font-medium text-gray-800"><%= current_user.name.presence || "未設定" %></p>
+    </div>
+    <div>
+      <p class="text-sm text-gray-500">メールアドレス</p>
+      <% if current_user.email_registered? %>
+        <p class="text-lg font-medium text-gray-800"><%= current_user.email %></p>
+      <% else %>
+        <p class="text-lg font-medium text-gray-400">未登録</p>
+      <% end %>
+    </div>
+  </div>
+
+  <%= link_to "編集する", edit_profile_path,
+    class: "mt-6 inline-block px-6 py-2 bg-green-500 text-white rounded-full hover:bg-green-600 transition" %>
+</div>
