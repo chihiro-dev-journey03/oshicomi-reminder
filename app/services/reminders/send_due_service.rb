@@ -5,7 +5,6 @@ module Reminders
     def initialize(now: Time.current)
       @now = now
     end
-
     def call
       due_reminders = Reminder.includes(:user, :book).select { |r| due?(r) }
       grouped = due_reminders.group_by(&:user_id)
@@ -59,4 +58,3 @@ module Reminders
     end
   end
 end
-
