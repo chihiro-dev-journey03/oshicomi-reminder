@@ -4,4 +4,12 @@ class StaticPagesController < ApplicationController
   def top
     redirect_to reminders_path if user_signed_in?
   end
+
+  def register
+    redirect_to reminders_path if user_signed_in?
+  end
+
+  def login
+    redirect_to reminders_path if user_signed_in?
+  end
 end

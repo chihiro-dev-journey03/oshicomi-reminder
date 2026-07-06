@@ -1,0 +1,24 @@
+<% content_for :title, "ログイン" %>
+
+<div class="w-full min-h-screen bg-gradient-to-b from-green-100 via-green-50 to-white flex flex-col items-center justify-center -mt-16 pt-16">
+  <div class="text-center px-8">
+    <h1 class="text-3xl font-bold mb-2" style="color:#22c55e;">ログイン</h1>
+    <p class="text-gray-500 text-sm mb-8">推しコミリマインダーへようこそ</p>
+
+    <div class="w-80 bg-white rounded-2xl shadow-md p-6 flex flex-col gap-3 mx-auto">
+      <%= button_to user_line_omniauth_authorize_path,
+            data: { turbo: false },
+            class: "w-full inline-flex items-center justify-center gap-3 px-6 py-3 bg-[#06C755] text-white font-bold rounded-full shadow hover:opacity-90 transition" do %>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 shrink-0">
+          <path d="M12 2C6.48 2 2 5.92 2 10.72c0 3.27 2.05 6.15 5.14 7.79-.2.73-.74 2.66-.85 3.07-.13.5.18.49.38.36.16-.1 2.5-1.7 3.52-2.38.58.08 1.18.13 1.81.13 5.52 0 10-3.92 10-8.77C22 5.92 17.52 2 12 2z"/>
+        </svg>
+        LINEでログイン
+      <% end %>
+    </div>
+
+    <p class="mt-6 text-sm text-gray-500">
+      アカウントをお持ちでない方は
+      <%= link_to "新規登録", register_path, class: "text-green-600 hover:underline font-medium" %>
+    </p>
+  </div>
+</div>
