@@ -1,0 +1,42 @@
+<% content_for :title, "プロフィール編集" %>
+
+<div class="max-w-xl mx-auto py-8">
+  <%= form_with model: @user, url: profile_path, method: :patch, class: "space-y-6" do |f| %>
+    <% if @user.errors.any? %>
+      <div class="bg-red-50 border border-red-200 rounded p-4">
+        <ul class="list-disc list-inside text-sm text-red-600">
+          <% @user.errors.full_messages.each do |msg| %>
+            <li><%= msg %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="bg-white rounded-xl shadow p-6 space-y-4">
+      <h2 class="text-lg font-semibold text-gray-700">ニックネーム</h2>
+      <%= f.label :name, "ニックネーム", class: "block text-sm text-gray-600 mb-1" %>
+      <%= f.text_field :name,
+            class: "w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400",
+            placeholder: "ニックネームを入力してください" %>
+    </div>
+
+    <div class="bg-white rounded-xl shadow p-6 space-y-4">
+      <h2 class="text-lg font-semibold text-gray-700">メールアドレス</h2>
+      <% unless current_user.email_registered? %>
+        <p class="text-sm text-amber-600">メール通知を受け取るには、メールアドレスを登録してください。</p>
+      <% end %>
+      <%= f.label :email, "メールアドレス", class: "block text-sm text-gray-600 mb-1" %>
+      <%= f.email_field :email,
+            value: current_user.email_registered? ? current_user.email : "",
+            class: "w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400",
+            placeholder: "example@email.com" %>
+    </div>
+
+    <div class="flex items-center gap-4">
+      <%= f.submit current_user.email_registered? ? "更新する" : "登録する",
+            class: "px-6 py-2 bg-green-500 text-white rounded-full hover:bg-green-600 transition cursor-pointer" %>
+      <%= link_to "キャンセル", profile_path,
+            class: "text-sm text-gray-500 hover:text-gray-700 transition" %>
+    </div>
+  <% end %>
+</div>

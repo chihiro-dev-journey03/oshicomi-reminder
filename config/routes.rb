@@ -1,6 +1,8 @@
 Rails.application.routes.draw do
   devise_for :users, controllers: { omniauth_callbacks: "users/omniauth_callbacks" }
   root "static_pages#top"
+  get "register", to: "static_pages#register", as: :register
+  get "login",    to: "static_pages#login",    as: :login
 
   resources :reminders, only: [ :index, :new, :create, :edit, :update, :destroy ]
   resources :recommend_lists, only: [ :index, :new, :create, :show, :edit, :update, :destroy ] do
@@ -14,6 +16,8 @@ Rails.application.routes.draw do
       get :search
     end
   end
+
+  resource :profile, only: [ :show, :edit, :update ], module: :users
 
   namespace :internal do
     post "reminders/send_due", to: "reminders#send_due"
