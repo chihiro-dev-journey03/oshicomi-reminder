@@ -41,6 +41,7 @@ gem "resend"
 gem "devise"
 gem "omniauth"
 gem "omniauth-line"
+gem "omniauth-google-oauth2"
 gem "omniauth-rails_csrf_protection"
 gem "dotenv-rails"
 group :development, :test do

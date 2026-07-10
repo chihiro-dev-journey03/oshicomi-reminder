@@ -9,7 +9,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
       sign_in @user, event: :authentication
       set_flash_message(:notice, :success, kind: "LINE") if is_navigational_format?
       if @user.previously_new_record?
-        redirect_to edit_profile_path, notice: "メールアドレスを登録してメール通知を受け取りましょう。"
+        redirect_to edit_profile_path, notice: "メールアドレスを登録してリマインダーを受け取りましょう。"
       else
         redirect_to after_sign_in_path_for(@user)
       end
@@ -19,7 +19,21 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
     end
   end
 
+  def google_oauth2
+    auth = request.env["omniauth.auth"]
+    @user = User.find_or_create_from_google_omniauth(auth)
+
+    if @user.persisted?
+      sign_in @user, event: :authentication
+      set_flash_message(:notice, :success, kind: "Google") if is_navigational_format?
+      redirect_to after_sign_in_path_for(@user)
+    else
+      session["devise.google_data"] = auth.except(:extra)
+      redirect_to root_url, alert: "Googleログインに失敗しました。"
+    end
+  end
+
   def failure
-    redirect_to root_url, alert: "LINEログインがキャンセルされました。"
+    redirect_to root_url, alert: "ログインがキャンセルされました。"
   end
 end
