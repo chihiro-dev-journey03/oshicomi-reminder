@@ -5,10 +5,23 @@
     <h1 class="text-3xl font-bold mb-2" style="color:#22c55e;">推しコミリマインダーに登録</h1>
     <p class="text-gray-500 text-sm mb-8">お気に入り漫画の更新日をメールで受け取ろう</p>
 
-    <div class="w-80 bg-white rounded-2xl shadow-md p-6 flex flex-col gap-3 mx-auto">
+    <div class="w-80 bg-white rounded-2xl shadow-md p-6 flex flex-col gap-3 mx-auto" data-controller="terms-agreement">
+      <label class="flex items-start gap-2 text-sm text-gray-600 cursor-pointer mb-1">
+        <input type="checkbox"
+               class="mt-0.5 shrink-0 accent-green-500"
+               data-terms-agreement-target="checkbox"
+               data-action="change->terms-agreement#toggle">
+        <span>
+          <%= link_to "利用規約", terms_path, class: "text-green-600 hover:underline", target: "_blank" %>
+          および
+          <%= link_to "プライバシーポリシー", privacy_policy_path, class: "text-green-600 hover:underline", target: "_blank" %>
+          に同意する
+        </span>
+      </label>
+
       <%= button_to user_google_oauth2_omniauth_authorize_path,
             data: { turbo: false },
-            class: "w-full inline-flex items-center justify-center gap-3 px-6 py-3 bg-[#4285F4] text-white font-bold rounded-full shadow hover:opacity-90 transition" do %>
+            class: "w-full inline-flex items-center justify-center gap-3 px-6 py-3 bg-[#4285F4] text-white font-bold rounded-full shadow hover:opacity-90 transition disabled:opacity-40 disabled:cursor-not-allowed" do %>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" class="w-5 h-5 shrink-0">
           <path fill="#fff" d="M44.5 20H24v8.5h11.8C34.7 33.9 29.1 37 24 37c-7.2 0-13-5.8-13-13s5.8-13 13-13c3.1 0 5.9 1.1 8.1 2.9l6.4-6.4C34.6 4.1 29.6 2 24 2 11.8 2 2 11.8 2 24s9.8 22 22 22c11 0 21-8 21-22 0-1.3-.2-2.7-.5-4z"/>
         </svg>
@@ -17,7 +30,7 @@
 
       <%= button_to user_line_omniauth_authorize_path,
             data: { turbo: false },
-            class: "w-full inline-flex items-center justify-center gap-3 px-6 py-3 bg-[#06C755] text-white font-bold rounded-full shadow hover:opacity-90 transition" do %>
+            class: "w-full inline-flex items-center justify-center gap-3 px-6 py-3 bg-[#06C755] text-white font-bold rounded-full shadow hover:opacity-90 transition disabled:opacity-40 disabled:cursor-not-allowed" do %>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 shrink-0">
           <path d="M12 2C6.48 2 2 5.92 2 10.72c0 3.27 2.05 6.15 5.14 7.79-.2.73-.74 2.66-.85 3.07-.13.5.18.49.38.36.16-.1 2.5-1.7 3.52-2.38.58.08 1.18.13 1.81.13 5.52 0 10-3.92 10-8.77C22 5.92 17.52 2 12 2z"/>
         </svg>
