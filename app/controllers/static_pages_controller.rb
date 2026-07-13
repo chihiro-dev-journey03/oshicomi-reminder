@@ -12,4 +12,10 @@ class StaticPagesController < ApplicationController
   def login
     redirect_to reminders_path if user_signed_in?
   end
+
+  def terms
+  end
+
+  def privacy_policy
+  end
 end

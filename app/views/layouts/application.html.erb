@@ -27,7 +27,7 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body>
+  <body class="flex flex-col min-h-screen">
     <%= render "shared/header" %>
     <div id="flash_notice">
       <% if notice %>
@@ -45,9 +45,14 @@
         </p>
       <% end %>
     </div>
-    <main class="container mx-auto mt-16 px-5 flex">
+    <main class="container mx-auto mt-16 px-5 flex flex-1">
       <%= yield %>
     </main>
+    <footer class="mt-16 border-t border-gray-200 py-6 text-center text-sm text-gray-500">
+      <%= link_to "利用規約", terms_path, class: "hover:underline hover:text-gray-700" %>
+      <span class="mx-2">|</span>
+      <%= link_to "プライバシーポリシー", privacy_policy_path, class: "hover:underline hover:text-gray-700" %>
+    </footer>
     <turbo-frame id="modal"></turbo-frame>
   </body>
 </html>
