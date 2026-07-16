@@ -153,7 +153,7 @@ RSpec.describe Reminder, type: :model do
   describe "#days_of_week_array=" do
     it "配列をビットマスクに変換して保存する" do
       reminder = build(:reminder)
-      reminder.days_of_week_array = [1, 3] # 月・水
+      reminder.days_of_week_array = [ 1, 3 ] # 月・水
       expect(reminder.days_of_week).to eq(0b0001010)
     end
   end
@@ -161,7 +161,7 @@ RSpec.describe Reminder, type: :model do
   describe "#days_of_week_array" do
     it "ビットマスクを曜日番号の配列に変換する" do
       reminder = build(:reminder, days_of_week: 0b0001010)
-      expect(reminder.days_of_week_array).to eq([1, 3])
+      expect(reminder.days_of_week_array).to eq([ 1, 3 ])
     end
   end
 end

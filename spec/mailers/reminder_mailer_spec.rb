@@ -5,10 +5,10 @@ RSpec.describe ReminderMailer, type: :mailer do
     let(:user)     { create(:user, email: "user@example.com", name: "テストユーザー") }
     let(:book)     { create(:book, title: "進撃の巨人") }
     let(:reminder) { create(:reminder, user: user, book: book) }
-    let(:mail)     { described_class.due_reminders(user, [reminder]) }
+    let(:mail)     { described_class.due_reminders(user, [ reminder ]) }
 
     it "宛先が正しい" do
-      expect(mail.to).to eq(["user@example.com"])
+      expect(mail.to).to eq([ "user@example.com" ])
     end
 
     it "件名が正しい" do
