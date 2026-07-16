@@ -10,11 +10,12 @@
     <%# OGP %>
     <meta property="og:site_name" content="推しコミリマインダー">
     <meta property="og:title" content="<%= content_for(:title) || "推しコミリマインダー" %>">
-    <meta property="og:description" content="<%= content_for(:description) || "推しのコミックスの発売リマインダーサービス" %>">
+    <meta property="og:description" content="<%= content_for(:description) || "推し漫画の更新日をメールでお知らせ。読み逃し防止と、推し作品の共有・布教ができるリマインダーアプリです。" %>">
     <meta property="og:type" content="<%= content_for(:og_type) || "website" %>">
     <meta property="og:url" content="https://oshicomi-reminder.com<%= request.path %>">
-    <% if content_for?(:og_image) %><meta property="og:image" content="<%= yield :og_image %>"><% end %>
+    <meta property="og:image" content="<%= content_for?(:og_image) ? yield(:og_image) : "https://oshicomi-reminder.com/ogp.png" %>">
     <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="<%= content_for?(:og_image) ? yield(:og_image) : "https://oshicomi-reminder.com/ogp.png" %>">
 
     <%= yield :head %>
 
